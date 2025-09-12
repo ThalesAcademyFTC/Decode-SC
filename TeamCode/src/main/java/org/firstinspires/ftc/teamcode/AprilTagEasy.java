@@ -62,8 +62,8 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Concept: AprilTag Easy", group = "Concept")
-@Disabled
+@TeleOp(name = "Concept: AprilTag Easy")
+//@Disabled
 public class AprilTagEasy extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -159,7 +159,9 @@ public class AprilTagEasy extends LinearOpMode {
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.addLine("RBE = Range, Bearing & Elevation");
 
-    }   // end method telemetryAprilTag()
+    }
+
+    // end method telemetryAprilTag()
 
 }   // end class
 
