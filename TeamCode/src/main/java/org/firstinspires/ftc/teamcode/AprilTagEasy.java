@@ -112,7 +112,7 @@ public class AprilTagEasy extends LinearOpMode {
         // Save more CPU resources when camera is no longer needed.
         visionPortal.close();
 
-    }   // end method runOpMode()
+    }   // end method runOpMode yes()
 
     /**
      * Initialize the AprilTag processor.
