@@ -33,7 +33,7 @@ public class colorSensor extends LinearOpMode {
                 .addData("Saturation", "%.3f", hsvValues[1])//Saturation
                 .addData("Value", "%.3f", hsvValues[2]);//Value
         telemetry.addData("Alpha", "%.3f", colors.alpha);//Light
-        if(hue>=285&&hue<=289&&sat>=56&&sat<=53&&value>=41&&value<=45){
+        if(hsvValues[0]>=285&&hue<=289&&sat>=56&&sat<=53&&value>=41&&value<=45){
             color="PURPLE";
         }
         else if(hue>=105&&hue<=102&&sat>=66&&sat<=70&&value>=25&&value<=29){
