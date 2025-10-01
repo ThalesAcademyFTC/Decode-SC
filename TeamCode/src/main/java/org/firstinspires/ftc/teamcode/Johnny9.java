@@ -143,21 +143,73 @@ public class Johnny9 {
         motorFrontRight.setPower(0);
     }
 
-    public void move(double x, double y, double turn) {
-        switch (drive) {
+    public void move(double x, double y, double turn){
+        double denominator;
+        double frontLeftPower;
+        double frontRightPower;
+        double backLeftPower;
+        double backRightPower;
+
+        switch(drive){
             //Johnny 9 movement code AKA BigJ
             case JOHNNY9:
+                denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(turn), 1);
 
+                frontLeftPower = (y + x + turn) / denominator;
+                frontRightPower = (y - x - turn) /denominator;
+                backLeftPower = (y - x + turn) / denominator;
+                backRightPower = (y + x - turn) / denominator;
+                telem.addLine("frontLeft:" + frontLeftPower);
+                telem.addLine("FrontRight:" + frontRightPower);
+                telem.addLine("BackLeft:" + backLeftPower);
+                telem.addLine("BackRight:" + backRightPower);
+
+                telem.addData("front left encoder:", getRotationFL());
+                telem.addData("front right encoder:", getRotationFR());
+                telem.addData("back left encoder:", getRotationBL());
+                telem.addData("back right encoder:", getRotationBR());
+
+                motorFrontLeft.setPower(frontLeftPower);
+                motorFrontRight.setPower(frontRightPower);
+                motorBackLeft.setPower(backLeftPower);
+                motorBackRight.setPower(backLeftPower);
                 break;
-
-            case MECHANUM:
-
-                break;
-
+            // Test is identical for now, but can be changed if needed.
             case TEST:
+                denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(turn), 1);
 
+                frontLeftPower = (y + x + turn) / denominator;
+                frontRightPower = (y - x - turn) /denominator;
+                backLeftPower = (y - x + turn) / denominator;
+                backRightPower = (y + x - turn) / denominator;
+                telem.addLine("frontLeft:" + frontLeftPower);
+                telem.addLine("FrontRight:" + frontRightPower);
+                telem.addLine("BackLeft:" + backLeftPower);
+                telem.addLine("BackRight:" + backRightPower);
+
+                telem.addData("front left encoder:", getRotationFL());
+                telem.addData("front right encoder:", getRotationFR());
+                telem.addData("back left encoder:", getRotationBL());
+                telem.addData("back right encoder:", getRotationBR());
+
+                motorFrontLeft.setPower(frontLeftPower);
+                motorFrontRight.setPower(frontRightPower);
+                motorBackLeft.setPower(backLeftPower);
+                motorBackRight.setPower(backLeftPower);
                 break;
         }
+    }
+
+    public void resetYaw() {imu.resetYaw();}
+    public double getHeading() {
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    }
+
+    void addSensorTelemetry(){
+        telem.addData("motor front left position ", this::getRotationFL);
+        telem.addData("motor front right position", this::getRotationFR);
+        telem.addData("motor back left position", this::getRotationBL);
+        telem.addData("motor back right position", this::getRotationBR);
     }
 
     public void waitForMotors() {
@@ -272,4 +324,9 @@ public class Johnny9 {
             return Obelisk.UNKNOWN;
         }
     }
+
+    double getRotationFL() {return motorFrontLeft.getCurrentPosition();}
+    double getRotationFR() {return motorFrontLeft.getCurrentPosition();}
+    double getRotationBL() {return motorBackLeft.getCurrentPosition();}
+    double getRotationBR() {return motorBackRight.getCurrentPosition();}
 }
