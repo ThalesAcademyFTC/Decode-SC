@@ -17,32 +17,35 @@ public class colorSensor extends LinearOpMode {
     public void runOpMode(){
     johnny9 = new Johnny9(this,Johnny9.Drivetrain.JOHNNY9);
     waitForStart();
+    if(opModeIsActive()){
+        while(opModeIsActive()){
+            getColor();
+            telemetry.addData("color:","%.3f",getColor());
+        }
+    }
 
     }
     public String getColor(){
         final float[] hsvValues = new float[3];//hue=0 saturation=1 value=2
-        float hue=hsvValues[0];
-        float sat=hsvValues[1];
-        float value=hsvValues[2];
+
         String color = "";
         NormalizedRGBA colors = johnny9.colorSensor.getNormalizedColors();//gets color sensor values
         Color.colorToHSV(colors.toColor(), hsvValues);//update hsv values from the color sensor
-
+        float hue=hsvValues[0];
+        float sat=hsvValues[1];
+        float value=hsvValues[2];
         telemetry.addLine()
                 .addData("Hue", "%.3f", hsvValues[0])//Hue
                 .addData("Saturation", "%.3f", hsvValues[1])//Saturation
                 .addData("Value", "%.3f", hsvValues[2]);//Value
         telemetry.addData("Alpha", "%.3f", colors.alpha);//Light
-        if(hsvValues[0]>=285&&hue<=289&&sat>=56&&sat<=53&&value>=41&&value<=45){
+        if(hue>=285 && hue<=289 && sat>=56 && sat<=53 && value>=41 && value<=45){
             color="PURPLE";
         }
-        else if(hue>=105&&hue<=102&&sat>=66&&sat<=70&&value>=25&&value<=29){
+        else if(hue>=105 && hue<=102 && sat>=66 && sat<=70 && value>=25 && value<=29){
             color="GREEN";
         }
 
-        if(color=="PURPLE"){
-
-        }
         return color;
 
     }
