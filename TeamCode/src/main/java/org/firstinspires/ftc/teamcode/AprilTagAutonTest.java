@@ -38,17 +38,17 @@ public class AprilTagAutonTest extends LinearOpMode {
                 switch (johnny9.getObelisk()) {
                     case GPP:
                         telemetry.addLine("found green, purple, purple");
-                        johnny9.moveLeftInches(12, speed);
+                        //johnny9.moveLeftInches(12, speed);
                         break;
                     case PGP:
                         telemetry.addLine("found purple, green, purple");
-                        johnny9.moveRightInches(12, speed);
+                        //johnny9.moveRightInches(12, speed);
                         break;
                     case PPG:
                         telemetry.addLine("found purple, purple, green");
-                        johnny9.moveForwardInches(12, speed);
+                        //johnny9.moveForwardInches(12, speed);
                         break;
-                    default:
+                    case UNKNOWN:
                         telemetry.addLine("null");
                         johnny9.rest();
                         break;

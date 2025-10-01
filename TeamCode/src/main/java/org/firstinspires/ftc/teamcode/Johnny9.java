@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -38,7 +40,8 @@ public class Johnny9 {
     public enum Obelisk {
         GPP,
         PGP,
-        PPG
+        PPG,
+        UNKNOWN
     }
 
     private Drivetrain drive;
@@ -50,11 +53,11 @@ public class Johnny9 {
 
     public IMU imu;
     private IMU.Parameters parameters;
-    public WebcamName webcamName;
     public AprilTagProcessor aprilTag;
     public VisionPortal visionPortal;
     private static final boolean USE_WEBCAM = true;
-    NormalizedColorSensor colorSensor;
+    RevColorSensorV3 colorSensor;
+    public Servo Led;
 
     static final double X_INCH_TICKS = 45;
     static final double Y_INCH_TICKS = 45;
@@ -98,7 +101,8 @@ public class Johnny9 {
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-                colorSensor = hwMap.get(NormalizedColorSensor.class, "colorSensor");
+                colorSensor = hwMap.get(RevColorSensorV3.class ,"colorSensor");
+                Led = hwMap.servo.get("LED");
                 imu = hwMap.get(IMU.class, "imu");
 
                 if (colorSensor instanceof SwitchableLight) {
@@ -115,7 +119,6 @@ public class Johnny9 {
                 motorFrontRight = hwMap.dcMotor.get("motorFrontRight");
                 motorBackLeft = hwMap.dcMotor.get("motorBackLeft");
                 motorBackRight = hwMap.dcMotor.get("motorBackRight");
-
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -123,7 +126,7 @@ public class Johnny9 {
                 motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
                 imu = hwMap.get(IMU.class, "imu");
-                webcamName = hwMap.get(WebcamName.class, "webcam");
+                //webcamNam = hwMap.get(WebcamName.class, "webcam");
 
                 parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
@@ -237,7 +240,7 @@ public class Johnny9 {
 
         if (USE_WEBCAM) {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
+                    hwMap.get(WebcamName.class, "Webcam 1"), aprilTag);
         } else {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     BuiltinCameraDirection.BACK, aprilTag);
@@ -249,10 +252,8 @@ public class Johnny9 {
 
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
-                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+
                 return detection.id;
-            } else {
-                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
             }
         }
         return 0;
@@ -262,13 +263,13 @@ public class Johnny9 {
         int tag = getTag();
 
         if (tag == 21) {
-            return Obelisk.PPG;
+            return Obelisk.GPP;
         } else if (tag == 22) {
             return Obelisk.PGP;
         } else if (tag == 23) {
             return Obelisk.PPG;
         } else {
-            return null;
+            return Obelisk.UNKNOWN;
         }
     }
 }

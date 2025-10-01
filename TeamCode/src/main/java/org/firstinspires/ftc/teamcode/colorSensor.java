@@ -2,27 +2,40 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-@TeleOp(name="color_sensor")
-@Disabled
+@Autonomous
+//@Disabled
 public class colorSensor extends LinearOpMode {
-    NormalizedColorSensor colorsensor;
+
     private Johnny9 johnny9;
+    String color="";
     @Override
     public void runOpMode(){
-    johnny9 = new Johnny9(this,Johnny9.Drivetrain.JOHNNY9);
-    waitForStart();
-    if(opModeIsActive()){
-        while(opModeIsActive()){
-            getColor();
-            telemetry.addData("color:","%.3f",getColor());
+        johnny9 = new Johnny9(this,Johnny9.Drivetrain.JOHNNY9);
+        waitForStart();
+        if(opModeIsActive()){
+            while(opModeIsActive()){
+                String color=getColor();
+                telemetry.addData("color:",color);
+                telemetry.update();
+                if(color=="GREEN"){
+                    johnny9.Led.setPosition(0.500);
+                }
+                else if(color=="PURPLE"){
+                    johnny9.Led.setPosition(0.722);
+                }
+                else{
+                    johnny9.Led.setPosition(1.000);
+                }
+            }
         }
-    }
 
     }
     public String getColor(){
@@ -39,11 +52,11 @@ public class colorSensor extends LinearOpMode {
                 .addData("Saturation", "%.3f", hsvValues[1])//Saturation
                 .addData("Value", "%.3f", hsvValues[2]);//Value
         telemetry.addData("Alpha", "%.3f", colors.alpha);//Light
-        if(hue>=285 && hue<=289 && sat>=56 && sat<=53 && value>=41 && value<=45){
-            color="PURPLE";
+        if(hue>=220 && hue<=240 && sat>=.5 && sat<=1 && value>=0.001 && value<=0.080){
+            color = "PURPLE";
         }
-        else if(hue>=105 && hue<=102 && sat>=66 && sat<=70 && value>=25 && value<=29){
-            color="GREEN";
+        else if(hue>=150 && hue<=180 && sat>=.75 && sat<=1 && value>=0.001 && value<=0.080){
+            color = "GREEN";
         }
 
         return color;
