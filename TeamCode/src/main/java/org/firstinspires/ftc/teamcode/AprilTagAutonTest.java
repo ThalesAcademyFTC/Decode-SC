@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,25 +19,23 @@ public class AprilTagAutonTest extends LinearOpMode {
     private Johnny9 johnny9;
 
     private ElapsedTime runtime=new ElapsedTime();
-
-
+    public Johnny9.Obelisk obValue = UNKNOWN;
+    public static final String OBELISK_VALUE_STRING = "obelisk";
     @Override
     public void runOpMode(){
         johnny9 = new Johnny9(this, Johnny9.Drivetrain.JOHNNY9);
         johnny9.initAprilTag();
         runtime.reset();
-        double speed = 0.5;
-        int rest = 100;
-        int aprilTagID = johnny9.getTag();
+
 
         waitForStart();
         // if id21 - move left
         // if id22 - move right
         // if id23 - move forward
         if(opModeIsActive()) {
-            while(opModeIsActive()) {
-                johnny9.getObelisk();
-                switch (johnny9.getObelisk()) {
+            while(opModeIsActive() && obValue == UNKNOWN) {
+                obValue = johnny9.getObelisk();
+                switch (obValue) {
                     case GPP:
                         telemetry.addLine("found green, purple, purple");
                         //johnny9.moveLeftInches(12, speed);
@@ -54,11 +54,14 @@ public class AprilTagAutonTest extends LinearOpMode {
                         break;
                 }
 
+
                 telemetry.update();
 
-                sleep(20);
             }
+            blackboard.put(OBELISK_VALUE_STRING,obValue);
+
         }
+
         johnny9.visionPortal.close();
 
     }
