@@ -64,6 +64,9 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
+
+// X= Left/Right Y= Forwards/Backwards Z= Up/Down
+// Pitch, Roll, and Yaw are rotations of their respective XYZ axis.
 @TeleOp(name = "LocalizationTest")
 public class LocalizationTest extends LinearOpMode {
 
@@ -71,7 +74,7 @@ public class LocalizationTest extends LinearOpMode {
 
     /**
      * Variables to store the position and orientation of the camera on the robot. Setting these
-     * values requires a definition of the axes of the camera and robot:
+     * values requires a definition of the axes of the camera and rob vot:
      *
      * Camera axes:
      * Origin location: Center of the lens
@@ -242,7 +245,7 @@ public class LocalizationTest extends LinearOpMode {
 
         // Add "key" information to telemetry
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+        telemetry.addLine("PRY = Pitch, Roll & Yaw (Rotation on XYZ)");
 
     }   // end method telemetryAprilTag()
 

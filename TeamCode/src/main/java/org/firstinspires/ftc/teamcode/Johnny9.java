@@ -18,8 +18,13 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -80,6 +85,7 @@ public class Johnny9 {
         this.auton = opmode;
         this.hwMap = opmode.hardwareMap;
         this.drive = type;
+        this.telem = opmode.telemetry;
         setupHardware();
     }
 
@@ -127,8 +133,8 @@ public class Johnny9 {
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-                imu = hwMap.get(IMU.class, "imu");
-                //webcamNam = hwMap.get(WebcamName.class, "webcam");
+                //imu = hwMap.get(IMU.class, "imu");
+                //webcam = hwMap.get(WebcamName.class, "webcam");
 
                 parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
@@ -290,7 +296,13 @@ public class Johnny9 {
     }
 
     public void initAprilTag() {
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+        Position cameraPosition = new Position(DistanceUnit.INCH,
+                -7, 8, 7, 0);
+        YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
+                0, -45, 0, 0);
+        aprilTag = new AprilTagProcessor.Builder()
+                .setCameraPose(cameraPosition, cameraOrientation)
+                .build();
 
         if (USE_WEBCAM) {
             visionPortal = VisionPortal.easyCreateWithDefaults(
@@ -325,6 +337,39 @@ public class Johnny9 {
         } else {
             return Obelisk.UNKNOWN;
         }
+    }
+
+    public AprilTagPoseFtc getPos(){
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        telem.addData("# AprilTags Detected", currentDetections.size());
+        AprilTagPoseFtc pose = null;
+
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                telem.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                // Only use tags that don't have Obelisk in them
+                if (!detection.metadata.name.contains("Obelisk")) {
+                    pose = detection.ftcPose;
+                    telem.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
+                            detection.ftcPose.x,
+                            detection.ftcPose.y,
+                            detection.ftcPose.z));
+                    telem.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
+                            detection.ftcPose.pitch,
+                            detection.ftcPose.roll,
+                            detection.ftcPose.yaw));
+                }
+            } else {
+                telem.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                telem.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+            }
+        }   // end for() loop
+
+        // Add "key" information to telemetry
+        telem.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+        telem.addLine("PRY = Pitch, Roll & Yaw (Rotation on XYZ)");
+        return pose;
     }
 
     double getRotationFL() {return motorFrontLeft.getCurrentPosition();}
