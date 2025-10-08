@@ -38,15 +38,12 @@ public class AprilTagAutonTest extends LinearOpMode {
                 switch (obValue) {
                     case GPP:
                         telemetry.addLine("found green, purple, purple");
-                        //johnny9.moveLeftInches(12, speed);
                         break;
                     case PGP:
                         telemetry.addLine("found purple, green, purple");
-                        //johnny9.moveRightInches(12, speed);
                         break;
                     case PPG:
                         telemetry.addLine("found purple, purple, green");
-                        //johnny9.moveForwardInches(12, speed);
                         break;
                     case UNKNOWN:
                         telemetry.addLine("null");
@@ -54,12 +51,59 @@ public class AprilTagAutonTest extends LinearOpMode {
                         break;
                 }
 
-
                 telemetry.update();
 
             }
             blackboard.put(OBELISK_VALUE_STRING,obValue);
 
+        }
+        while(opModeIsActive()){
+           /* if(detection.id==20)(blue team)
+            start bottom left ! in launch zone
+            then have 3 balls loaded in( you know what i mean)
+            go in launch zone( go left -> to launch line on the opposite side)
+            rotate till the bot is on the white line
+            fire ball1 ball2 ball3
+            hope and pray to our lord and savior shawn Crownover that it works
+            go get balls(go right into loading zone)
+            pick up balls in loading zone in right order of the obelisk(G,P,P)(P,G,P)(P,P,G)
+            repeat until 30 seconds is up
+
+            if (detection.id==24)(red team)
+            start bottom right ! in launch zone
+            then have the three balls loaded in 4 the obelisk
+            go to launch line(go right till launch line is detected on the opposite sides)
+            rotate till green light says that it is on the launch line
+            fire and hope to pray to shawn crownover that it will work
+            go get balls( go left till loading zone and pick up balls)
+            repeat till 30 seconds
+
+            if(detection.id==20)(blue team)
+            start bottom left in launch zone
+            then have 3 balls loaded in( you know what i mean)
+            rotate till bot is on the white line with a green light that says that it is good :)
+            fire ball1 ball2 ball3
+            hope and pray to our lord and savior shawn Crownover that it works
+            go get balls(go right into loading zone)
+            pick up balls in loading zone in right order of the obelisk(G,P,P)(P,G,P)(P,P,G)
+            repeat until 30 seconds is up
+
+            if (detection.id==24)(red team)
+            start bottom right in launch zone
+            then have the three balls loaded in 4 the obelisk
+            rotate till green light says that it is on the launch line :)
+            fire and hope to pray to shawn crownover that it will work
+            go get balls( go left till loading zone and pick up balls)
+            repeat till 30 seconds
+            yippeeeee
+            */
+            if(johnny9.getTag()==20)//blue team start ! on launch line
+            {
+                // move left till the launchhh zone
+                johnny9.moveLeftInches(12,0.25);// im gonna do 12 for now but until wee see the actual values
+
+            }
+            continue;
         }
 
         johnny9.visionPortal.close();
