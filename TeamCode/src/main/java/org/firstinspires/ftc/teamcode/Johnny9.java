@@ -297,16 +297,16 @@ public class Johnny9 {
 
     public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
-                -7, 8, 7, 0);
+                0, 8.5, 3, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
-                0, -45, 0, 0);
+                0, -15, 0, 0);
         aprilTag = new AprilTagProcessor.Builder()
                 .setCameraPose(cameraPosition, cameraOrientation)
                 .build();
 
         if (USE_WEBCAM) {
             visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hwMap.get(WebcamName.class, "Webcam 1"), aprilTag);
+                    hwMap.get(WebcamName.class, "Eye of Johnny 9"), aprilTag);
         } else {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     BuiltinCameraDirection.BACK, aprilTag);
@@ -359,6 +359,38 @@ public class Johnny9 {
                             detection.ftcPose.pitch,
                             detection.ftcPose.roll,
                             detection.ftcPose.yaw));
+                }
+            } else {
+                telem.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                telem.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+            }
+        }   // end for() loop
+
+        // Add "key" information to telemetry
+        telem.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+        telem.addLine("PRY = Pitch, Roll & Yaw (Rotation on XYZ)");
+        return pose;
+    }
+    public Pose3D getRobotPos(){
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        telem.addData("# AprilTags Detected", currentDetections.size());
+        Pose3D pose = null;
+
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                telem.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                // Only use tags that don't have Obelisk in them
+                if (!detection.metadata.name.contains("Obelisk")) {
+                    pose = detection.robotPose;
+                    telem.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
+                            detection.robotPose.getPosition().x,
+                            detection.robotPose.getPosition().y,
+                            detection.robotPose.getPosition().z));
+                    telem.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
+                            detection.robotPose.getOrientation().getPitch(),
+                            detection.robotPose.getOrientation().getRoll(),
+                            detection.robotPose.getOrientation().getYaw()));
                 }
             } else {
                 telem.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
