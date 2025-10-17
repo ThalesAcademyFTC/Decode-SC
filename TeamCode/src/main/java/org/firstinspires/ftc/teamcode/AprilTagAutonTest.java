@@ -41,7 +41,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                         break;
                     case PGP:
                         telemetry.addLine("found purple, green, purple");
-                        break;
+                        break; 
                     case PPG:
                         telemetry.addLine("found purple, purple, green");
                         break;

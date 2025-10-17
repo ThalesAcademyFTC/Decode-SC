@@ -68,7 +68,7 @@ import java.util.List;
 // X= Left/Right Y= Forwards/Backwards Z= Up/Down
 // Pitch, Roll, and Yaw are rotations of their respective XYZ axis.
 @TeleOp(name = "LocalizationTest")
-public class LocalizationTest extends LinearOpMode {
+public class  LocalizationTest extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
