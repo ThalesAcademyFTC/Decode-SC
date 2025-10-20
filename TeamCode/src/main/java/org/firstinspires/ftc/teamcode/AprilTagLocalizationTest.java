@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Ethan is a silly billy ")
+@TeleOp(name="BigJ")
 public class AprilTagLocalizationTest extends LinearOpMode {
     private Johnny9 johnny9;
 
@@ -19,14 +19,11 @@ public class AprilTagLocalizationTest extends LinearOpMode {
         johnny9 = new Johnny9(this, Johnny9.Drivetrain.JOHNNY9);
         johnny9.initAprilTag();
         runtime.reset();
-        boolean ftcTag = false;
+        boolean ftcTag = true;
         boolean toogle = true;
 
 
         waitForStart();
-        // if id21 - move left
-        // if id22 - move right
-        // if id23 - move forward
         if(opModeIsActive()) {
             while(opModeIsActive()) {
                 if (ftcTag) {

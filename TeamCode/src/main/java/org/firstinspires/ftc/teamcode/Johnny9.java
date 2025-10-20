@@ -343,14 +343,16 @@ public class Johnny9 {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telem.addData("# AprilTags Detected", currentDetections.size());
         AprilTagPoseFtc pose = null;
-
+        if (currentDetections.isEmpty()){
+            Led.setPosition(1.0);
+        }
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 if (detection.ftcPose.y <= 60){
-                    Led.setPosition(0.444);
+                    Led.setPosition(0.485);
                 } else {
-                    Led.setPosition(1.0);
+                    Led.setPosition(0.280);
                 }
                 telem.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 // Only use tags that don't have Obelisk in them
