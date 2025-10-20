@@ -54,7 +54,8 @@ public class Johnny9 {
     private Drivetrain drive;
     private Telemetry telem;
 
-    public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight;
+    public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, barrelMotor;
+    public Servo cylinderServo;
 
     public DcMotor[] allDriveMotors;
 
@@ -104,6 +105,9 @@ public class Johnny9 {
                 motorFrontRight = hwMap.dcMotor.get("motorFrontRight");
                 motorBackLeft = hwMap.dcMotor.get("motorBackLeft");
                 motorBackRight = hwMap.dcMotor.get("motorBackRight");
+                barrelMotor = hwMap.dcMotor.get("barrelMotor");
+                cylinderServo = hwMap.servo.get("cylinderServo");
+
 
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -293,6 +297,14 @@ public class Johnny9 {
     public void moveLeftInches(double inches, double speed) {
 
         moveRightInches(-inches, -speed);
+    }
+
+    public void cylinderSpin(double inches){
+
+    }
+
+    public void barrelFire(double speed){
+        barrelMotor.setPower(speed);
     }
 
     public void initAprilTag() {
