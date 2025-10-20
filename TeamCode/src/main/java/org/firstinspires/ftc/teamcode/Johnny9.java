@@ -347,6 +347,11 @@ public class Johnny9 {
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
+                if (detection.ftcPose.y <= 60){
+                    Led.setPosition(0.444);
+                } else {
+                    Led.setPosition(1.0);
+                }
                 telem.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 // Only use tags that don't have Obelisk in them
                 if (!detection.metadata.name.contains("Obelisk")) {
