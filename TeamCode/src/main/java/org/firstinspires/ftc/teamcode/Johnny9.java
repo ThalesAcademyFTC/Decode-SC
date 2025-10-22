@@ -72,6 +72,10 @@ public class Johnny9 {
     static final double X_DEGREE_TICKS = 11.1;
     static final double Y_DEGREE_TICKS = 11.1;
 
+    static final double GREENPOS = 0.485;
+    static final double REDPOS = 0.280;
+    static final double WHITEPOS = 1.0;
+
     //Setup for the Johnny9 teleop AKA BigJ
     public Johnny9(OpMode opmode, Drivetrain drivetrain) {
         this.teleop = opmode;
@@ -295,12 +299,15 @@ public class Johnny9 {
     }
 
     public void moveLeftInches(double inches, double speed) {
-
         moveRightInches(-inches, -speed);
     }
 
-    public void cylinderSpin(double inches){
-
+    public double cylinderSpin(double pos, double change){
+        pos += change;
+        if (pos >= 1){pos -= 1;}
+        if (pos < 0){pos += 1;}
+        cylinderServo.setPosition(pos);
+        return pos;
     }
 
     public void barrelFire(double speed){
@@ -356,15 +363,15 @@ public class Johnny9 {
         telem.addData("# AprilTags Detected", currentDetections.size());
         AprilTagPoseFtc pose = null;
         if (currentDetections.isEmpty()){
-            Led.setPosition(1.0);
+            Led.setPosition(WHITEPOS);
         }
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 if (detection.ftcPose.y <= 60){
-                    Led.setPosition(0.485);
+                    Led.setPosition(GREENPOS);
                 } else {
-                    Led.setPosition(0.280);
+                    Led.setPosition(REDPOS);
                 }
                 telem.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 // Only use tags that don't have Obelisk in them
