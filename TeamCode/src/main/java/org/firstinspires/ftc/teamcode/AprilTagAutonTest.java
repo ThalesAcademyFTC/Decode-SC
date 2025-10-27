@@ -26,7 +26,8 @@ public class AprilTagAutonTest extends LinearOpMode {
         johnny9 = new Johnny9(this, Johnny9.Drivetrain.JOHNNY9);
         johnny9.initAprilTag();
         runtime.reset();
-
+        double speed=0.5;
+        int rest=100;
 
         waitForStart();
         // if id21 - move left
@@ -97,11 +98,19 @@ public class AprilTagAutonTest extends LinearOpMode {
             repeat till 30 seconds
             yippeeeee
             */
-            if(johnny9.getTag()==20)//blue team start ! on launch line
+            if(johnny9.getTag()==20)//blue team start  on launch line
             {
-                // move left till the launchhh zone
-                johnny9.moveLeftInches(12,0.25);// im gonna do 12 for now but until wee see the actual values
-
+               johnny9.moveForwardInches(72,speed);
+               sleep(rest);
+               johnny9.turnLeftDegrees(45,speed);
+               sleep(rest);
+               johnny9.barrelFire(speed);
+               sleep(rest);
+            }
+            if(johnny9.getTag()==24)//red team start on launch line
+            {
+                johnny9.turnLeftDegrees(360,speed);
+                sleep(rest);
             }
             continue;
         }

@@ -301,6 +301,24 @@ public class Johnny9 {
     public void moveLeftInches(double inches, double speed) {
         moveRightInches(-inches, -speed);
     }
+    public void turnRightDegrees(double degrees, double speed){
+        int tickTarget=(int)Math.round(degrees*X_DEGREE_TICKS);
+        resetDriveEncoders();
+        motorFrontLeft.setTargetPosition(tickTarget);
+        motorFrontRight.setTargetPosition(-tickTarget);
+        motorBackLeft.setTargetPosition(tickTarget);
+        motorBackRight.setTargetPosition(-tickTarget);
+
+        for(DcMotor x:allDriveMotors){
+            x.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        move(0,0,speed);
+        waitForMotors();
+        resetDriveEncoders();
+    }
+    public void turnLeftDegrees(double degrees, double speed){
+        turnRightDegrees(-degrees, -speed);
+    }
 
     public double cylinderSpin(double pos, double change){
         pos += change;
@@ -318,7 +336,7 @@ public class Johnny9 {
         Position cameraPosition = new Position(DistanceUnit.INCH,
                 0, 8.5, 3, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
-                0, -15, 0, 0);
+                0, -15f, 0, 0);
         aprilTag = new AprilTagProcessor.Builder()
                 .setCameraPose(cameraPosition, cameraOrientation)
                 .build();
