@@ -51,9 +51,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                         johnny9.rest();
                         break;
                 }
-
                 telemetry.update();
-
             }
             blackboard.put(OBELISK_VALUE_STRING,obValue);
 
@@ -100,19 +98,22 @@ public class AprilTagAutonTest extends LinearOpMode {
             */
             if(johnny9.getTag()==20)//blue team start  on launch line
             {
-               johnny9.moveForwardInches(72,speed);
-               sleep(rest);
-               johnny9.turnLeftDegrees(45,speed);
-               sleep(rest);
-               johnny9.barrelFire(speed);
-               sleep(rest);
+                johnny9.moveForwardInches(72,speed);
+                sleep(rest);
+                johnny9.turnLeftDegrees(45,speed);
+                sleep(rest);
+                johnny9.barrelFire(.3);
+                sleep(rest);
+                johnny9.turnRightDegrees(45, speed);
+                sleep(rest);
+                johnny9.moveBackwardInches(18, speed);
+                sleep(rest);
             }
             if(johnny9.getTag()==24)//red team start on launch line
             {
                 johnny9.turnLeftDegrees(360,speed);
                 sleep(rest);
             }
-            continue;
         }
 
         johnny9.visionPortal.close();
