@@ -266,7 +266,7 @@ public class Johnny9 {
 
         }
 
-        move(0, -speed, 0);
+        move(0, speed, 0);
 
         waitForMotors();
 
