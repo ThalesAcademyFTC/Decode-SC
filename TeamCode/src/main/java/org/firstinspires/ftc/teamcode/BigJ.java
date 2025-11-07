@@ -14,6 +14,8 @@ public class BigJ extends LinearOpMode {
     private Johnny9 johnny9;
     AprilTagPoseFtc ftcPose = null;
     Pose3D robotPose = null;
+    static final double CYLINDERSPINNY = .33;
+    static final double ADJUSTMENTSPINNY = .05;
 
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
@@ -29,6 +31,7 @@ public class BigJ extends LinearOpMode {
         boolean ftcToogle = true;
         boolean spinToogle = true;
         boolean spinny = false;
+        boolean intakeOffset = false;
 
 
         waitForStart();
@@ -56,14 +59,26 @@ public class BigJ extends LinearOpMode {
                 } else {
                     johnny9.barrelFire(0);
                 }
-                if (gamepad2.dpad_up || gamepad2.dpad_down) {
+                if (gamepad2.left_trigger > 0) {
+                    johnny9.intakeSystem(.3);
+                } else {
+                    johnny9.intakeSystem(0);
+                }
+                if (gamepad2.dpad_up || gamepad2.dpad_down || gamepad2.x) {
                     if (spinToogle){
                         spinny = true;
                         spinToogle = false;
                         if (gamepad2.dpad_up){
-                            cylinderChange = .33;
+                            cylinderChange = CYLINDERSPINNY;
+                        } else if (gamepad2.dpad_down){
+                            cylinderChange = -CYLINDERSPINNY;
                         } else {
-                            cylinderChange = -.33;
+                            intakeOffset = !intakeOffset;
+                            if (intakeOffset){
+                                cylinderChange = -ADJUSTMENTSPINNY;
+                            } else {
+                                cylinderChange = ADJUSTMENTSPINNY;
+                            }
                         }
                     }
                 } else {
@@ -74,7 +89,7 @@ public class BigJ extends LinearOpMode {
                     spinny = false;
                 }
                 // Localization
-                if (gamepad1.x) {
+                if (gamepad1.b) {
                     if (ftcToogle){
                         ftcTag = !ftcTag;
                         ftcToogle = false;
