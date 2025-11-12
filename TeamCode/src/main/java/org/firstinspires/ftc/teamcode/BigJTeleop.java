@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
-@TeleOp(name="BigJ")
-public class BigJ extends LinearOpMode {
+@TeleOp(name="BigJTeleop")
+public class BigJTeleop extends LinearOpMode {
     private Johnny9 johnny9;
     AprilTagPoseFtc ftcPose = null;
     Pose3D robotPose = null;
-    static final double CYLINDERSPINNY = .33;
+    static final double CYLINDERSPINNY = .4;
+    static final double OFFSETSPINNY = .1;
     static final double ADJUSTMENTSPINNY = .05;
-
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -26,12 +26,9 @@ public class BigJ extends LinearOpMode {
         johnny9.initAprilTag();
         runtime.reset();
         double cylinderPos = 0;
-        double cylinderChange = 0;
+        double cylinderChange;
         boolean ftcTag = true;
-        boolean ftcToogle = true;
-        boolean spinToogle = true;
-        boolean spinny = false;
-        boolean intakeOffset = false;
+        boolean cylinderOffset = false;
 
 
         waitForStart();
@@ -64,38 +61,28 @@ public class BigJ extends LinearOpMode {
                 } else {
                     johnny9.intakeSystem(0);
                 }
-                if (gamepad2.dpad_up || gamepad2.dpad_down || gamepad2.x) {
-                    if (spinToogle){
-                        spinny = true;
-                        spinToogle = false;
-                        if (gamepad2.dpad_up){
-                            cylinderChange = CYLINDERSPINNY;
-                        } else if (gamepad2.dpad_down){
-                            cylinderChange = -CYLINDERSPINNY;
-                        } else {
-                            intakeOffset = !intakeOffset;
-                            if (intakeOffset){
-                                cylinderChange = -ADJUSTMENTSPINNY;
-                            } else {
-                                cylinderChange = ADJUSTMENTSPINNY;
-                            }
-                        }
+                if (gamepad2.dpadUpWasPressed()){
+                    cylinderChange = CYLINDERSPINNY;
+                } else if (gamepad2.dpadDownWasPressed()) {
+                    cylinderChange = -CYLINDERSPINNY;
+                } else if (gamepad2.dpadRightWasPressed()) {
+                    cylinderChange = ADJUSTMENTSPINNY;
+                } else if (gamepad2.dpadLeftWasPressed()){
+                    cylinderChange = -ADJUSTMENTSPINNY;
+                } else if (gamepad2.xWasPressed()) {
+                    cylinderOffset = !cylinderOffset;
+                    if (cylinderOffset){
+                        cylinderChange = -OFFSETSPINNY;
+                    } else {
+                        cylinderChange = OFFSETSPINNY;
                     }
                 } else {
-                    spinToogle = true;
+                    cylinderChange = 0;
                 }
-                if (spinny) {
-                    cylinderPos = johnny9.cylinderSpin(cylinderPos, cylinderChange);
-                    spinny = false;
-                }
+                cylinderPos = johnny9.cylinderSpin(cylinderPos, cylinderChange);
                 // Localization
-                if (gamepad1.b) {
-                    if (ftcToogle){
+                if (gamepad1.bWasPressed()) {
                         ftcTag = !ftcTag;
-                        ftcToogle = false;
-                    }
-                } else {
-                    ftcToogle = true;
                 }
                 if (ftcTag) {
                     ftcPose = johnny9.getPos();

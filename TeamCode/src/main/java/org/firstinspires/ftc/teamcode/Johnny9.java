@@ -57,10 +57,10 @@ public class Johnny9 {
 
     public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, barrelMotor;
     public Servo cylinderServo;
-    public CRServo intakeServo0, intakeServo1, intakeServo2;
+    public CRServo intakeServo0/*, intakeServo1, intakeServo2*/;
 
     public DcMotor[] allDriveMotors = {motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
-    public CRServo[] allIntakeServos = {intakeServo0, intakeServo1, intakeServo2};
+    //public CRServo[] allIntakeServos = {intakeServo0, intakeServo1, intakeServo2};
 
     public IMU imu;
     private IMU.Parameters parameters;
@@ -115,14 +115,14 @@ public class Johnny9 {
                 barrelMotor = hwMap.dcMotor.get("barrelMotor");
                 cylinderServo = hwMap.servo.get("cylinderServo");
                 intakeServo0 = hwMap.crservo.get("intakeServo0");
-                intakeServo1 = hwMap.crservo.get("intakeServo1");
-                intakeServo2 = hwMap.crservo.get("intakeServo2");
+                //intakeServo1 = hwMap.crservo.get("intakeServo1");
+                //intakeServo2 = hwMap.crservo.get("intakeServo2");
 
 
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-                intakeServo1.setDirection(CRServo.Direction.REVERSE);
+                //intakeServo1.setDirection(CRServo.Direction.REVERSE);
 
                 colorSensor = hwMap.get(RevColorSensorV3.class ,"colorSensor");
                 Led = hwMap.servo.get("LED");
@@ -340,9 +340,9 @@ public class Johnny9 {
     }
 
     public void intakeSystem(double speed){
-        for (CRServo x: allIntakeServos){
-            x.setPower(speed);
-        }
+        //for (CRServo x: allIntakeServos){
+            intakeServo0.setPower(speed);
+        //}
     }
 
     public void initAprilTag() {
