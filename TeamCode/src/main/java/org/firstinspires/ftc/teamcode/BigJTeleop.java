@@ -14,21 +14,19 @@ public class BigJTeleop extends LinearOpMode {
     private Johnny9 johnny9;
     AprilTagPoseFtc ftcPose = null;
     Pose3D robotPose = null;
-    static final double CYLINDERSPINNY = .4;
-    static final double OFFSETSPINNY = .1;
-    static final double ADJUSTMENTSPINNY = .05;
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
     public static final String OBELISK_VALUE_STRING = "obelisk";
     @Override
     public void runOpMode(){
         johnny9 = new Johnny9(this, Johnny9.Drivetrain.JOHNNY9);
-        johnny9.initAprilTag();
+        //johnny9.initAprilTag();
         runtime.reset();
         double cylinderPos = 0;
         double cylinderChange;
-        boolean ftcTag = true;
+        int cylinderAdjustment = 0;
         boolean cylinderOffset = false;
+
 
 
         waitForStart();
@@ -43,45 +41,50 @@ public class BigJTeleop extends LinearOpMode {
 
                 y *= y;
                 if (gamepad1.left_stick_y > 0){
-                    y =- y;
+                    y = -y;
                 }
                 x *= x;
                 if (gamepad1.left_stick_x < 0){
-                    x =- x;
+                    x = -x;
                 }
                 johnny9.move(x, y, turn);
                 // Special functions
+                // launch trigger(right trigger)
                 if (gamepad2.right_trigger > 0 /*&& johnny9.Led.getPosition() == Johnny9.GREENPOS*/) {
-                    johnny9.barrelFire(.3);
+                    johnny9.launchTime(1);
                 } else {
-                    johnny9.barrelFire(0);
+                    johnny9.launchTime(0);
                 }
+                //intake system(left trigger
                 if (gamepad2.left_trigger > 0) {
-                    johnny9.intakeSystem(.3);
+                    johnny9.intakeSystem(0.6);
                 } else {
                     johnny9.intakeSystem(0);
                 }
+                //move the drum(dpadUp-move up)(dpadDown-down)(
                 if (gamepad2.dpadUpWasPressed()){
-                    cylinderChange = CYLINDERSPINNY;
+                    cylinderChange = Johnny9.CYLINDERSPINNY;
                 } else if (gamepad2.dpadDownWasPressed()) {
-                    cylinderChange = -CYLINDERSPINNY;
+                    cylinderChange = -Johnny9.CYLINDERSPINNY;
                 } else if (gamepad2.dpadRightWasPressed()) {
-                    cylinderChange = ADJUSTMENTSPINNY;
+                    cylinderChange = Johnny9.ADJUSTMENTSPINNY;
+                    cylinderAdjustment++;
                 } else if (gamepad2.dpadLeftWasPressed()){
-                    cylinderChange = -ADJUSTMENTSPINNY;
+                    cylinderChange = -Johnny9.ADJUSTMENTSPINNY;
+                    cylinderAdjustment--;
                 } else if (gamepad2.xWasPressed()) {
                     cylinderOffset = !cylinderOffset;
                     if (cylinderOffset){
-                        cylinderChange = -OFFSETSPINNY;
+                        cylinderChange = -Johnny9.OFFSETSPINNY;
                     } else {
-                        cylinderChange = OFFSETSPINNY;
+                        cylinderChange = Johnny9.OFFSETSPINNY;
                     }
                 } else {
                     cylinderChange = 0;
                 }
-                cylinderPos = johnny9.cylinderSpin(cylinderPos, cylinderChange);
+                cylinderPos = johnny9.cylinderSpin(cylinderPos, cylinderChange, cylinderOffset, cylinderAdjustment);
                 // Localization
-                if (gamepad1.bWasPressed()) {
+                /*if (gamepad1.bWasPressed()) {
                         ftcTag = !ftcTag;
                 }
                 if (ftcTag) {
@@ -91,10 +94,10 @@ public class BigJTeleop extends LinearOpMode {
                     robotPose = johnny9.getRobotPos();
                     telemetry.addLine("\nMode: robotPose");
                 }
-                telemetry.update();
+                telemetry.update();*/
             }
         }
-        johnny9.visionPortal.close();
+        //johnny9.visionPortal.close();
 
     }
 }

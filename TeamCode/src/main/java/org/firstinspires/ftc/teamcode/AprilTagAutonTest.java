@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -57,7 +58,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                 sleep(rest);
                 johnny9.turnLeftDegrees(45,speed);
                 sleep(rest);
-                johnny9.barrelFire(.3);
+                johnny9.launchTime(.3);
                 sleep(rest);
                 johnny9.turnRightDegrees(45, speed);
                 sleep(rest);
@@ -70,7 +71,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                 sleep(rest);
                 johnny9.turnRightDegrees(45, speed);
                 sleep(rest);
-                johnny9.barrelFire(speed);
+                johnny9.launchTime(speed);
                 sleep(rest);
                 johnny9.moveBackwardInches(18,speed);
                 sleep(rest);
@@ -116,7 +117,7 @@ public class AprilTagAutonTest extends LinearOpMode {
             go get balls( go left till loading zone and pick up balls)
             repeat till 30 seconds
             yippeeeee
-            */
+
 
 
         }
@@ -124,5 +125,4 @@ public class AprilTagAutonTest extends LinearOpMode {
         johnny9.visionPortal.close();
 
     }
-
-}
+}*/

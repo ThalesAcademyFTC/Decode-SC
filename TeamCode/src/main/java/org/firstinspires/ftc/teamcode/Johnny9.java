@@ -55,20 +55,20 @@ public class Johnny9 {
     private Drivetrain drive;
     private Telemetry telem;
 
-    public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, barrelMotor;
+    public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, launcherMotor;
     public Servo cylinderServo;
-    public CRServo intakeServo0/*, intakeServo1, intakeServo2*/;
+    public CRServo intakeServo0, intakeServo1, intakeServo2;
 
-    public DcMotor[] allDriveMotors = {motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
-    //public CRServo[] allIntakeServos = {intakeServo0, intakeServo1, intakeServo2};
+    public DcMotor[] allDriveMotors;
+    public CRServo[] allIntakeServos;
 
     public IMU imu;
     private IMU.Parameters parameters;
     public AprilTagProcessor aprilTag;
     public VisionPortal visionPortal;
     private static final boolean USE_WEBCAM = true;
-    RevColorSensorV3 colorSensor;
-    public Servo Led;
+    //RevColorSensorV3 colorSensor;
+    //public Servo Led;
 
     static final double X_INCH_TICKS = 45;
     static final double Y_INCH_TICKS = 45;
@@ -78,6 +78,9 @@ public class Johnny9 {
     static final double GREENPOS = 0.485;
     static final double REDPOS = 0.280;
     static final double WHITEPOS = 1.0;
+    static final double OFFSETSPINNY = .1;
+    static final double ADJUSTMENTSPINNY = .05;
+    static final double CYLINDERSPINNY = .4;
 
     //Setup for the Johnny9 teleop AKA BigJ
     public Johnny9(OpMode opmode, Drivetrain drivetrain) {
@@ -112,25 +115,27 @@ public class Johnny9 {
                 motorFrontRight = hwMap.dcMotor.get("motorFrontRight");
                 motorBackLeft = hwMap.dcMotor.get("motorBackLeft");
                 motorBackRight = hwMap.dcMotor.get("motorBackRight");
-                barrelMotor = hwMap.dcMotor.get("barrelMotor");
+                launcherMotor = hwMap.dcMotor.get("launcherMotor");
                 cylinderServo = hwMap.servo.get("cylinderServo");
                 intakeServo0 = hwMap.crservo.get("intakeServo0");
-                //intakeServo1 = hwMap.crservo.get("intakeServo1");
-                //intakeServo2 = hwMap.crservo.get("intakeServo2");
+                intakeServo1 = hwMap.crservo.get("intakeServo1");
+                intakeServo2 = hwMap.crservo.get("intakeServo2");
 
 
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
+                allIntakeServos = new CRServo[]{intakeServo0, intakeServo1, intakeServo2};
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-                //intakeServo1.setDirection(CRServo.Direction.REVERSE);
+                intakeServo0.setDirection(CRServo.Direction.REVERSE);
+                intakeServo2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-                colorSensor = hwMap.get(RevColorSensorV3.class ,"colorSensor");
-                Led = hwMap.servo.get("LED");
+                //colorSensor = hwMap.get(RevColorSensorV3.class ,"colorSensor");
+                //Led = hwMap.servo.get("LED");
                 imu = hwMap.get(IMU.class, "imu");
 
-                if (colorSensor instanceof SwitchableLight) {
+                /*if (colorSensor instanceof SwitchableLight) {
                     ((SwitchableLight) colorSensor).enableLight(true);
-                }
+                }*/
                 parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
                         RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
@@ -309,43 +314,52 @@ public class Johnny9 {
         moveRightInches(-inches, -speed);
     }
     public void turnRightDegrees(double degrees, double speed){
-        int tickTarget=(int)Math.round(degrees*X_DEGREE_TICKS);
+        int tickTarget = (int) Math.round(degrees * X_DEGREE_TICKS);
+
         resetDriveEncoders();
+
         motorFrontLeft.setTargetPosition(tickTarget);
         motorFrontRight.setTargetPosition(-tickTarget);
         motorBackLeft.setTargetPosition(tickTarget);
         motorBackRight.setTargetPosition(-tickTarget);
 
-        for(DcMotor x:allDriveMotors){
+        for (DcMotor x : allDriveMotors) {
+
             x.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         }
-        move(0,0,speed);
-        waitForMotors();
-        resetDriveEncoders();
+
+        move(0, 0, speed);
     }
+
     public void turnLeftDegrees(double degrees, double speed){
         turnRightDegrees(-degrees, -speed);
     }
 
-    public double cylinderSpin(double pos, double change){
+    public double cylinderSpin(double pos, double change, boolean offset, int adjustment){
         pos += change;
-        if (pos >= 1){pos -= 1;}
-        if (pos < 0){pos += 1;}
+        if (pos >= 1 || pos < 0){
+            pos = 0;
+            pos += adjustment * ADJUSTMENTSPINNY;
+            if (offset){
+                pos += OFFSETSPINNY;
+            }
+        }
         cylinderServo.setPosition(pos);
         return pos;
     }
 
-    public void barrelFire(double speed){
-        barrelMotor.setPower(speed);
+    public void launchTime(double speed){
+        launcherMotor.setPower(speed);
     }
 
     public void intakeSystem(double speed){
-        //for (CRServo x: allIntakeServos){
-            intakeServo0.setPower(speed);
-        //}
+        for (CRServo x: allIntakeServos){
+            x.setPower(speed);
+        }
     }
 
-    public void initAprilTag() {
+    /*public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
                 0, 8.5, 3, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
@@ -459,7 +473,7 @@ public class Johnny9 {
         telem.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
         telem.addLine("PRY = Pitch, Roll & Yaw (Rotation on XYZ)");
         return pose;
-    }
+    }*/
 
     double getRotationFL() {return motorFrontLeft.getCurrentPosition();}
     double getRotationFR() {return motorFrontLeft.getCurrentPosition();}
