@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
@@ -65,4 +65,4 @@ public class colorSensor extends LinearOpMode {
 
 
 }
-
+*/

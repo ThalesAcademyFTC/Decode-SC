@@ -60,7 +60,7 @@ public class Johnny9 {
     public CRServo intakeServo0, intakeServo1, intakeServo2;
     public DcMotor[] allDriveMotors;
     public CRServo[] allIntakeServos;
-    public NormalizedColorSensor colorSensor;
+   // public NormalizedColorSensor colorSensor;
 
     public IMU imu;
     private IMU.Parameters parameters;
@@ -74,9 +74,10 @@ public class Johnny9 {
     public static final double GREENPOS = 0.485;
     public static final double REDPOS = 0.280;
     static final double WHITEPOS = 1.0;
-    static final double OFFSETSPINNY = .1;
+    static final double OFFSETSPINNY = -.15;
     static final double ADJUSTMENTSPINNY = .05;
-    static final double CYLINDERSPINNY = .4;
+    static final double CYLINDERSPINNY = .45;
+    static final double CYLINDERSTART = 0;
 
     //Setup for the Johnny9 teleop AKA BigJ
     public Johnny9(OpMode opmode, Drivetrain drivetrain) {
@@ -116,7 +117,7 @@ public class Johnny9 {
                 intakeServo0 = hwMap.crservo.get("intakeServo0");
                 intakeServo1 = hwMap.crservo.get("intakeServo1");
                 intakeServo2 = hwMap.crservo.get("intakeServo2");
-                colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
+                //colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
                 Led=hwMap.servo.get("Led");
 
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
@@ -335,10 +336,13 @@ public class Johnny9 {
     public double cylinderSpin(double pos, double change, boolean offset, int adjustment){
         pos += change;
         if (pos >= 1 || pos < 0){
-            pos = 0;
+            pos = CYLINDERSTART;
             pos += adjustment * ADJUSTMENTSPINNY;
             if (offset){
                 pos += OFFSETSPINNY;
+            }
+            if (pos >= CYLINDERSPINNY){
+                pos %= CYLINDERSPINNY;
             }
         }
         cylinderServo.setPosition(pos);

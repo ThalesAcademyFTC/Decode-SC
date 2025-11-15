@@ -22,7 +22,7 @@ public class BigJTeleop extends LinearOpMode {
         johnny9 = new Johnny9(this, Johnny9.Drivetrain.JOHNNY9);
         //johnny9.initAprilTag();
         runtime.reset();
-        double cylinderPos = 0;
+        double cylinderPos = Johnny9.CYLINDERSTART;
         double cylinderChange;
         int cylinderAdjustment = 0;
         boolean cylinderOffset = false;
@@ -58,11 +58,11 @@ public class BigJTeleop extends LinearOpMode {
                 }
                 //intake system(left trigger
                 if (gamepad2.left_trigger > 0) {
-                    johnny9.intakeSystem(0.6);
+                    johnny9.intakeSystem(1);
                 } else {
                     johnny9.intakeSystem(0);
                 }
-
+                //Cylinder changes for spin, adjustment, and intake offset.
                 if (gamepad2.dpadUpWasPressed()){
                     cylinderChange = Johnny9.CYLINDERSPINNY;
                 } else if (gamepad2.dpadDownWasPressed()) {
@@ -73,9 +73,7 @@ public class BigJTeleop extends LinearOpMode {
                 } else if (gamepad2.dpadLeftWasPressed()){
                     cylinderChange = -Johnny9.ADJUSTMENTSPINNY;
                     cylinderAdjustment--;
-                }
-                //
-                else if (gamepad2.xWasPressed()) {
+                } else if (gamepad2.xWasPressed()) {
                     cylinderOffset = !cylinderOffset;
                     if (cylinderOffset){
                         cylinderChange = -Johnny9.OFFSETSPINNY;
@@ -86,17 +84,21 @@ public class BigJTeleop extends LinearOpMode {
                     cylinderChange = 0;
                 }
                 cylinderPos = johnny9.cylinderSpin(cylinderPos, cylinderChange, cylinderOffset, cylinderAdjustment);
+                telemetry.addData("\nOffset: ", String.valueOf(cylinderOffset));
+                telemetry.addData("Adjustment: ", String.valueOf(cylinderAdjustment));
+                telemetry.addData("Position: ", String.valueOf(cylinderPos));
+                telemetry.update();
 
                 /* Led output, if the blue tag is read,
                  and the position is practically on the line(edit if need be),
                  then it turns green(can edit based on length of shot)
                  */
-                if(johnny9.getTag()==20 && (johnny9.getPos().y<-30 && johnny9.getPos().x<-30 && johnny9.getPos().y>-26 && johnny9.getPos().x>-26)){
+               /* if(johnny9.getTag()==20 ){
                     johnny9.Led.setPosition(johnny9.GREENPOS);
                 }
                 else{
                     johnny9.Led.setPosition(johnny9.REDPOS);
-                }
+                }*/
                 // Localization
                 /*if (gamepad1.bWasPressed()) {
                         ftcTag = !ftcTag;
@@ -111,7 +113,7 @@ public class BigJTeleop extends LinearOpMode {
                 telemetry.update();*/
             }
         }
-        johnny9.visionPortal.close();
+       // johnny9.visionPortal.close();
 
     }
 }
