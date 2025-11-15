@@ -1,4 +1,4 @@
-/*package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
 
@@ -42,4 +42,3 @@ public  class Blackboard extends OpMode  {
     }
 
 }
-*/

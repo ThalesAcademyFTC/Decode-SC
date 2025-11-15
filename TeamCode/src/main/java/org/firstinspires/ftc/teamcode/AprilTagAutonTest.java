@@ -1,4 +1,4 @@
-/*package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
 
@@ -117,7 +117,7 @@ public class AprilTagAutonTest extends LinearOpMode {
             go get balls( go left till loading zone and pick up balls)
             repeat till 30 seconds
             yippeeeee
-
+*/
 
 
         }
@@ -125,4 +125,4 @@ public class AprilTagAutonTest extends LinearOpMode {
         johnny9.visionPortal.close();
 
     }
-}*/
+}

@@ -56,27 +56,23 @@ public class Johnny9 {
     private Telemetry telem;
 
     public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, launcherMotor;
-    public Servo cylinderServo;
+    public Servo cylinderServo, Led;
     public CRServo intakeServo0, intakeServo1, intakeServo2;
-
     public DcMotor[] allDriveMotors;
     public CRServo[] allIntakeServos;
+    public NormalizedColorSensor colorSensor;
 
     public IMU imu;
     private IMU.Parameters parameters;
     public AprilTagProcessor aprilTag;
     public VisionPortal visionPortal;
     private static final boolean USE_WEBCAM = true;
-    //RevColorSensorV3 colorSensor;
-    //public Servo Led;
-
     static final double X_INCH_TICKS = 45;
     static final double Y_INCH_TICKS = 45;
     static final double X_DEGREE_TICKS = 11.1;
     static final double Y_DEGREE_TICKS = 11.1;
-
-    static final double GREENPOS = 0.485;
-    static final double REDPOS = 0.280;
+    public static final double GREENPOS = 0.485;
+    public static final double REDPOS = 0.280;
     static final double WHITEPOS = 1.0;
     static final double OFFSETSPINNY = .1;
     static final double ADJUSTMENTSPINNY = .05;
@@ -120,7 +116,8 @@ public class Johnny9 {
                 intakeServo0 = hwMap.crservo.get("intakeServo0");
                 intakeServo1 = hwMap.crservo.get("intakeServo1");
                 intakeServo2 = hwMap.crservo.get("intakeServo2");
-
+                colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
+                Led=hwMap.servo.get("Led");
 
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
                 allIntakeServos = new CRServo[]{intakeServo0, intakeServo1, intakeServo2};
@@ -129,8 +126,7 @@ public class Johnny9 {
                 intakeServo0.setDirection(CRServo.Direction.REVERSE);
                 intakeServo2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-                //colorSensor = hwMap.get(RevColorSensorV3.class ,"colorSensor");
-                //Led = hwMap.servo.get("LED");
+
                 imu = hwMap.get(IMU.class, "imu");
 
                 /*if (colorSensor instanceof SwitchableLight) {
@@ -359,7 +355,7 @@ public class Johnny9 {
         }
     }
 
-    /*public void initAprilTag() {
+    public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
                 0, 8.5, 3, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
@@ -413,11 +409,7 @@ public class Johnny9 {
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
-                if (detection.ftcPose.y <= 60){
-                    Led.setPosition(GREENPOS);
-                } else {
-                    Led.setPosition(REDPOS);
-                }
+
                 telem.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 // Only use tags that don't have Obelisk in them
                 if (!detection.metadata.name.contains("Obelisk")) {
@@ -473,7 +465,7 @@ public class Johnny9 {
         telem.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
         telem.addLine("PRY = Pitch, Roll & Yaw (Rotation on XYZ)");
         return pose;
-    }*/
+    }
 
     double getRotationFL() {return motorFrontLeft.getCurrentPosition();}
     double getRotationFR() {return motorFrontLeft.getCurrentPosition();}
