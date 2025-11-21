@@ -14,24 +14,20 @@ public class BigJTeleop extends LinearOpMode {
     private Johnny9 johnny9;
     AprilTagPoseFtc ftcPose = null;
     Pose3D robotPose = null;
-    private ElapsedTime runtime=new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
     public static final String OBELISK_VALUE_STRING = "obelisk";
+
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
         johnny9 = new Johnny9(this, Johnny9.Drivetrain.JOHNNY9);
         //johnny9.initAprilTag();
         runtime.reset();
-        double cylinderPos = Johnny9.CYLINDERSTART;
-        double cylinderChange;
-        int cylinderAdjustment = 0;
-        boolean cylinderOffset = false;
-
 
 
         waitForStart();
-        if(opModeIsActive()) {
-            while(opModeIsActive()) {
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
                 // Movement
                 double y = gamepad1.left_stick_y;
                 double x = gamepad1.left_stick_x;
@@ -40,11 +36,11 @@ public class BigJTeleop extends LinearOpMode {
                 telemetry.update();
 
                 y *= y;
-                if (gamepad1.left_stick_y > 0){
+                if (gamepad1.left_stick_y > 0) {
                     y = -y;
                 }
                 x *= x;
-                if (gamepad1.left_stick_x < 0){
+                if (gamepad1.left_stick_x < 0) {
                     x = -x;
                 }
                 johnny9.move(x, y, turn);
@@ -56,39 +52,18 @@ public class BigJTeleop extends LinearOpMode {
                 } else {
                     johnny9.launchTime(0);
                 }
+
                 //intake system(left trigger
                 if (gamepad2.left_trigger > 0) {
                     johnny9.intakeSystem(1);
+
+                }
+                //output system
+                if (gamepad2.leftBumperWasPressed()) {
+                    johnny9.intakeSystem(-1);
                 } else {
                     johnny9.intakeSystem(0);
                 }
-                //Cylinder changes for spin, adjustment, and intake offset.
-                if (gamepad2.dpadUpWasPressed()){
-                    cylinderChange = Johnny9.CYLINDERSPINNY;
-                } else if (gamepad2.dpadDownWasPressed()) {
-                    cylinderChange = -Johnny9.CYLINDERSPINNY;
-                } else if (gamepad2.dpadRightWasPressed()) {
-                    cylinderChange = Johnny9.ADJUSTMENTSPINNY;
-                    cylinderAdjustment++;
-                } else if (gamepad2.dpadLeftWasPressed()){
-                    cylinderChange = -Johnny9.ADJUSTMENTSPINNY;
-                    cylinderAdjustment--;
-                } else if (gamepad2.xWasPressed()) {
-                    cylinderOffset = !cylinderOffset;
-                    if (cylinderOffset){
-                        cylinderChange = -Johnny9.OFFSETSPINNY;
-                    } else {
-                        cylinderChange = Johnny9.OFFSETSPINNY;
-                    }
-                } else {
-                    cylinderChange = 0;
-                }
-                cylinderPos = johnny9.cylinderSpin(cylinderPos, cylinderChange, cylinderOffset, cylinderAdjustment);
-                telemetry.addData("\nOffset: ", String.valueOf(cylinderOffset));
-                telemetry.addData("Adjustment: ", String.valueOf(cylinderAdjustment));
-                telemetry.addData("Position: ", String.valueOf(cylinderPos));
-                telemetry.update();
-
                 /* Led output, if the blue tag is read,
                  and the position is practically on the line(edit if need be),
                  then it turns green(can edit based on length of shot)
@@ -100,7 +75,7 @@ public class BigJTeleop extends LinearOpMode {
                     johnny9.Led.setPosition(johnny9.REDPOS);
                 }*/
                 // Localization
-                /*if (gamepad1.bWasPressed()) {
+              /*  if (gamepad1.bWasPressed()) {
                         ftcTag = !ftcTag;
                 }
                 if (ftcTag) {
@@ -110,10 +85,11 @@ public class BigJTeleop extends LinearOpMode {
                     robotPose = johnny9.getRobotPos();
                     telemetry.addLine("\nMode: robotPose");
                 }
-                telemetry.update();*/
+                telemetry.update();
+            }*/
             }
-        }
-       // johnny9.visionPortal.close();
+            // johnny9.visionPortal.close();
 
+        }
     }
 }

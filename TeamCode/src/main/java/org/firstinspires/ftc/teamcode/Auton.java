@@ -19,7 +19,7 @@ public class Auton  extends LinearOpMode {
         runtime.reset();
         double speed = 0.5;
         int rest = 100;
-        johnny9.cylinderServo.setPosition(johnny9.CYLINDERSTART);
+
         waitForStart();
         johnny9.moveBackwardInches(12,speed);
         sleep(rest);
@@ -28,7 +28,7 @@ public class Auton  extends LinearOpMode {
         johnny9.moveBackwardInches(12,speed);
         sleep(rest);
         johnny9.launchTime(1);
-        sleep(rest);
+
 
     }
 }

@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
+import com.qualcomm.robotcore.hardware.configuration.WebcamConfiguration;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -56,8 +57,11 @@ public class Johnny9 {
     private Telemetry telem;
 
     public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, launcherMotor;
-    public Servo cylinderServo, Led;
-    public CRServo intakeServo0, intakeServo1, intakeServo2;
+    public Servo Led;
+
+    public VisionPortal eyeofjohnny9;
+    public CRServo intakeServo0/*,intakeServo1, intakeServo2*/,feedServo;
+
     public DcMotor[] allDriveMotors;
     public CRServo[] allIntakeServos;
    // public NormalizedColorSensor colorSensor;
@@ -74,10 +78,6 @@ public class Johnny9 {
     public static final double GREENPOS = 0.485;
     public static final double REDPOS = 0.280;
     static final double WHITEPOS = 1.0;
-    static final double OFFSETSPINNY = -.15;
-    static final double ADJUSTMENTSPINNY = .05;
-    static final double CYLINDERSPINNY = .45;
-    static final double CYLINDERSTART = 0;
 
     //Setup for the Johnny9 teleop AKA BigJ
     public Johnny9(OpMode opmode, Drivetrain drivetrain) {
@@ -113,19 +113,19 @@ public class Johnny9 {
                 motorBackLeft = hwMap.dcMotor.get("motorBackLeft");
                 motorBackRight = hwMap.dcMotor.get("motorBackRight");
                 launcherMotor = hwMap.dcMotor.get("launcherMotor");
-                cylinderServo = hwMap.servo.get("cylinderServo");
+
                 intakeServo0 = hwMap.crservo.get("intakeServo0");
-                intakeServo1 = hwMap.crservo.get("intakeServo1");
-                intakeServo2 = hwMap.crservo.get("intakeServo2");
+                //intakeServo1 = hwMap.crservo.get("intakeServo1");
+                //intakeServo2 = hwMap.crservo.get("intakeServo2");
                 //colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
                 Led=hwMap.servo.get("Led");
-
+                feedServo=hwMap.get(CRServo.class,"feedServo");
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
-                allIntakeServos = new CRServo[]{intakeServo0, intakeServo1, intakeServo2};
+                allIntakeServos = new CRServo[]{intakeServo0/*, intakeServo1, intakeServo2*/};
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 intakeServo0.setDirection(CRServo.Direction.REVERSE);
-                intakeServo2.setDirection(DcMotorSimple.Direction.REVERSE);
+                //intakeServo2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
                 imu = hwMap.get(IMU.class, "imu");
@@ -333,21 +333,10 @@ public class Johnny9 {
         turnRightDegrees(-degrees, -speed);
     }
 
-    public double cylinderSpin(double pos, double change, boolean offset, int adjustment){
-        pos += change;
-        if (pos >= 1 || pos < 0){
-            pos = CYLINDERSTART;
-            pos += adjustment * ADJUSTMENTSPINNY;
-            if (offset){
-                pos += OFFSETSPINNY;
-            }
-            if (pos >= CYLINDERSPINNY){
-                pos %= CYLINDERSPINNY;
-            }
-        }
-        cylinderServo.setPosition(pos);
-        return pos;
-    }
+
+
+
+
 
     public void launchTime(double speed){
         launcherMotor.setPower(speed);
@@ -407,9 +396,6 @@ public class Johnny9 {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telem.addData("# AprilTags Detected", currentDetections.size());
         AprilTagPoseFtc pose = null;
-        if (currentDetections.isEmpty()){
-            Led.setPosition(WHITEPOS);
-        }
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
