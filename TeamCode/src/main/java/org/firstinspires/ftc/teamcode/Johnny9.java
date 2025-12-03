@@ -77,6 +77,8 @@ public class Johnny9 {
     static final double Y_DEGREE_TICKS = 11.1;
     public static final double GREENPOS = 0.485;
     public static final double REDPOS = 0.280;
+
+    public static final double BLUEPOS=0.555;
     static final double WHITEPOS = 1.0;
 
     //Setup for the Johnny9 teleop AKA BigJ
@@ -270,12 +272,12 @@ public class Johnny9 {
 
         for (DcMotor x : allDriveMotors) {
 
-            x.setTargetPosition(tickTarget);
+            x.setTargetPosition(-tickTarget);
             x.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
 
-        move(0, speed, 0);
+        move(0, -speed, 0);
 
         waitForMotors();
 
@@ -327,6 +329,9 @@ public class Johnny9 {
         }
 
         move(0, 0, speed);
+        waitForMotors();
+
+        resetDriveEncoders();
     }
 
     public void turnLeftDegrees(double degrees, double speed){

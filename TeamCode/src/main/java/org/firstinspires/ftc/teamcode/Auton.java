@@ -17,17 +17,13 @@ public class Auton  extends LinearOpMode {
     public void runOpMode() {
         johnny9 = new Johnny9(this, Johnny9.Drivetrain.JOHNNY9);
         runtime.reset();
-        double speed = 0.5;
+        double speed = .5;
         int rest = 100;
 
         waitForStart();
-        johnny9.moveBackwardInches(12,speed);
+        //johnny9.moveForwardInches((24*3.5),speed);
+        johnny9.turnLeftDegrees(90,speed);
         sleep(rest);
-        johnny9.turnLeftDegrees(45,speed);
-        sleep(rest);
-        johnny9.moveBackwardInches(12,speed);
-        sleep(rest);
-        johnny9.launchTime(1);
 
 
     }

@@ -83,21 +83,16 @@ public class BigJTeleopTest extends OpMode {
         }
 
 
+        // Localization
+        ftcPose = Johnny9.getPos();
+        if(ftcPose.y<=60 && ftcPose.y>=30){
 
+            johnny9.Led.setPosition(johnny9.GREENPOS);
 
-
-               if(johnny9.getTag()==20 && ftcPose.y<=60 && ftcPose.y>=30){
-
-                    johnny9.Led.setPosition(johnny9.GREENPOS);
-
-                }
-                else{
-
-                    johnny9.Led.setPosition(johnny9.REDPOS);
-
-                }
-                // Localization
-
+        }
+        else  {
+            johnny9.Led.setPosition(johnny9.BLUEPOS);
+        }
     }
     @Override
     public void stop(){
