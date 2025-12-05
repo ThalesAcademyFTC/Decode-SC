@@ -21,7 +21,8 @@ public class Auton  extends LinearOpMode {
         int rest = 100;
 
         waitForStart();
-        //johnny9.moveForwardInches((24*3.5),speed);
+        johnny9.moveForwardInches((24*3.5),speed);
+        sleep(rest);
         johnny9.turnLeftDegrees(90,speed);
         sleep(rest);
 

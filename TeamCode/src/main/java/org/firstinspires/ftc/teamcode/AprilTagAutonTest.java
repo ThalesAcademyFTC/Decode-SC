@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class AprilTagAutonTest extends LinearOpMode {
 
         waitForStart();
         if(opModeIsActive()) {
-            while(opModeIsActive() && obValue == UNKNOWN) {
+            /*while(opModeIsActive() && obValue == UNKNOWN) {
                 obValue = johnny9.getObelisk();
                 switch (obValue) {
                     case GPP:
@@ -40,7 +41,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                         break;
                     case PGP:
                         telemetry.addLine("found purple, green, purple");
-                        break; 
+                        break;
                     case PPG:
                         telemetry.addLine("found purple, purple, green");
                         break;
@@ -48,6 +49,28 @@ public class AprilTagAutonTest extends LinearOpMode {
                         telemetry.addLine("null");
                         johnny9.rest();
                         break;
+                }
+                telemetry.update();
+            }*/
+            AprilTagPoseFtc ftcPose;
+            while(opModeIsActive()) {
+                // search for goal april tag and turn robot to point straight at it
+
+                ftcPose = johnny9.getPos();
+                //telemetry.addData("Yaw: %f", ftcPose.yaw);
+                if (ftcPose != null) {
+                    if(ftcPose.yaw>1.5){
+                        johnny9.turnLeftDegrees(ftcPose.yaw,speed);
+                    }
+                    else if(ftcPose.yaw<-1.5){
+                        johnny9.turnRightDegrees(ftcPose.yaw,speed);
+                    }
+                    else{
+                        sleep(rest);
+                    }
+                } else {
+                    // No tag detected
+                    sleep(rest);
                 }
                 telemetry.update();
             }

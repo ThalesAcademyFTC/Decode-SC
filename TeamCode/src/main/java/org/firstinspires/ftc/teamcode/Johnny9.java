@@ -195,6 +195,7 @@ public class Johnny9 {
                 telem.addData("front right encoder:", getRotationFR());
                 telem.addData("back left encoder:", getRotationBL());
                 telem.addData("back right encoder:", getRotationBR());
+                telem.update();
 
                 motorFrontLeft.setPower(frontLeftPower);
                 motorFrontRight.setPower(frontRightPower);
@@ -232,7 +233,7 @@ public class Johnny9 {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
-    void addSensorTelemetry(){
+    public void addSensorTelemetry(){
         telem.addData("motor front left position ", this::getRotationFL);
         telem.addData("motor front right position", this::getRotationFR);
         telem.addData("motor back left position", this::getRotationBL);
@@ -312,6 +313,7 @@ public class Johnny9 {
     public void moveLeftInches(double inches, double speed) {
         moveRightInches(-inches, -speed);
     }
+
     public void turnRightDegrees(double degrees, double speed){
         int tickTarget = (int) Math.round(degrees * X_DEGREE_TICKS);
 
@@ -337,11 +339,6 @@ public class Johnny9 {
     public void turnLeftDegrees(double degrees, double speed){
         turnRightDegrees(-degrees, -speed);
     }
-
-
-
-
-
 
     public void launchTime(double speed){
         launcherMotor.setPower(speed);

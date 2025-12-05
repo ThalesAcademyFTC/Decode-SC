@@ -84,7 +84,7 @@ public class BigJTeleopTest extends OpMode {
 
 
         // Localization
-        ftcPose = Johnny9.getPos();
+        ftcPose = johnny9.getPos();
         telemetry.update();
         if(ftcPose.y<=60 && ftcPose.y>=30){
 
