@@ -84,8 +84,12 @@ public class BigJTeleopTest extends OpMode {
 
 
         // Localization
+<<<<<<< Updated upstream
         ftcPose = johnny9.getPos();
         telemetry.update();
+=======
+       // ftcPose = Johnny9.getPos();
+>>>>>>> Stashed changes
         if(ftcPose.y<=60 && ftcPose.y>=30){
 
             johnny9.Led.setPosition(johnny9.GREENPOS);
