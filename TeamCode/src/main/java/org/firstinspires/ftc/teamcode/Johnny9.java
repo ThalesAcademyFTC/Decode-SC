@@ -186,7 +186,7 @@ public class Johnny9 {
                 frontRightPower = (y - x - turn) /denominator;
                 backLeftPower = (y - x + turn) / denominator;
                 backRightPower = (y + x - turn) / denominator;
-                telem.addLine("frontLeft:" + frontLeftPower);
+               /* telem.addLine("frontLeft:" + frontLeftPower);
                 telem.addLine("FrontRight:" + frontRightPower);
                 telem.addLine("BackLeft:" + backLeftPower);
                 telem.addLine("BackRight:" + backRightPower);
@@ -195,12 +195,12 @@ public class Johnny9 {
                 telem.addData("front right encoder:", getRotationFR());
                 telem.addData("back left encoder:", getRotationBL());
                 telem.addData("back right encoder:", getRotationBR());
-                telem.update();
+                telem.update();*/
 
                 motorFrontLeft.setPower(frontLeftPower);
                 motorFrontRight.setPower(frontRightPower);
                 motorBackLeft.setPower(backLeftPower);
-                motorBackRight.setPower(backLeftPower);
+                motorBackRight.setPower(backRightPower);
                 break;
             // Test is identical for now, but can be changed if needed.
             case TEST:
@@ -210,7 +210,7 @@ public class Johnny9 {
                 frontRightPower = (y - x - turn) /denominator;
                 backLeftPower = (y - x + turn) / denominator;
                 backRightPower = (y + x - turn) / denominator;
-                telem.addLine("frontLeft:" + frontLeftPower);
+                /*telem.addLine("frontLeft:" + frontLeftPower);
                 telem.addLine("FrontRight:" + frontRightPower);
                 telem.addLine("BackLeft:" + backLeftPower);
                 telem.addLine("BackRight:" + backRightPower);
@@ -218,12 +218,12 @@ public class Johnny9 {
                 telem.addData("front left encoder:", getRotationFL());
                 telem.addData("front right encoder:", getRotationFR());
                 telem.addData("back left encoder:", getRotationBL());
-                telem.addData("back right encoder:", getRotationBR());
+                telem.addData("back right encoder:", getRotationBR());*/
 
                 motorFrontLeft.setPower(frontLeftPower);
                 motorFrontRight.setPower(frontRightPower);
                 motorBackLeft.setPower(backLeftPower);
-                motorBackRight.setPower(backLeftPower);
+                motorBackRight.setPower(backRightPower);
                 break;
         }
     }
@@ -352,7 +352,7 @@ public class Johnny9 {
 
     public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
-                0, 8.5, 3, 0);
+                8.75, 8.75, 5.75, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
                 0, -15f, 0, 0);
         aprilTag = new AprilTagProcessor.Builder()

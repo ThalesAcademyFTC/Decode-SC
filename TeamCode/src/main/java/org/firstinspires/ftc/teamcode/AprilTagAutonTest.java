@@ -22,6 +22,11 @@ public class AprilTagAutonTest extends LinearOpMode {
 
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
+
+    public static final double FIRINGMAX=100;
+    public static final double FIRINGMIN=80;
+    public static final double FIRINGLEEWAY=20;
+    public static final double TURNLEEWAY = 2.5;
     public static final String OBELISK_VALUE_STRING = "obelisk";
     @Override
     public void runOpMode(){
@@ -57,19 +62,40 @@ public class AprilTagAutonTest extends LinearOpMode {
                 // search for goal april tag and turn robot to point straight at it
 
                 ftcPose = johnny9.getPos();
-                //telemetry.addData("Yaw: %f", ftcPose.yaw);
+
                 if (ftcPose != null) {
-                    if(ftcPose.yaw>1.5){
+                    telemetry.addData("Yaw: %f", ftcPose.yaw);
+                    if(ftcPose.yaw>TURNLEEWAY){
                         johnny9.turnLeftDegrees(ftcPose.yaw,speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
                     }
-                    else if(ftcPose.yaw<-1.5){
-                        johnny9.turnRightDegrees(ftcPose.yaw,speed);
+                    else if(ftcPose.yaw<-TURNLEEWAY){
+                        johnny9.turnRightDegrees(-ftcPose.yaw,speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    }
+                    else if (ftcPose.x>FIRINGLEEWAY){
+                        johnny9.moveRightInches(ftcPose.x,speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    }
+                    else if (ftcPose.x<-FIRINGLEEWAY){
+                        johnny9.moveLeftInches(-ftcPose.x,speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    }
+                    else if(ftcPose.y>FIRINGMAX){
+                        johnny9.moveForwardInches(ftcPose.y-FIRINGMAX,speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    }
+                    else if(ftcPose.y<FIRINGMIN){
+                        johnny9.moveBackwardInches(FIRINGMIN-ftcPose.y,speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
                     }
                     else{
                         sleep(rest);
+                        johnny9.Led.setPosition(johnny9.GREENPOS);
                     }
                 } else {
                     // No tag detected
+                    johnny9.Led.setPosition(johnny9.REDPOS);
                     sleep(rest);
                 }
                 telemetry.update();
@@ -104,6 +130,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                 sleep(rest);
                 johnny9.moveBackwardInches(18,speed);
                 sleep(rest);
+
             }
 
         }
