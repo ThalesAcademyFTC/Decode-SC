@@ -36,7 +36,7 @@ public class BigJTeleop extends LinearOpMode {
                 telemetry.update();
 
                 y *= y;
-                if (gamepad1.left_stick_y > 0) {
+                if (gamepad1.left_stick_y < 0) {
                     y = -y;
                 }
                 x *= x;
@@ -53,17 +53,34 @@ public class BigJTeleop extends LinearOpMode {
                     johnny9.launchTime(0);
                 }
 
-                //intake system(left trigger
+                //intake system(left trigger)
                 if (gamepad2.left_trigger > 0) {
                     johnny9.intakeSystem(1);
-
                 }
                 //output system
-                if (gamepad2.leftBumperWasPressed()) {
+                else if (gamepad2.leftBumperWasPressed()) {
                     johnny9.intakeSystem(-1);
                 } else {
                     johnny9.intakeSystem(0);
                 }
+
+                if (gamepad2.dpad_up){
+                    johnny9.elevate(1);
+                } else if (gamepad2.dpad_down){
+                    johnny9.elevate(-1);
+                } else {
+                    johnny9.elevate(0);
+                }
+
+                /*ftcPose = johnny9.getPos();
+                telemetry.update();
+                if (ftcPose != null) {
+                    if (ftcPose.y > 80 || ftcPose.y < 20) {
+                        johnny9.Led.setPosition(johnny9.REDPOS);
+                    } else {
+                        johnny9.Led.setPosition((johnny9.GREENPOS));
+                    }
+                }*/
                 /* Led output, if the blue tag is read,
                  and the position is practically on the line(edit if need be),
                  then it turns green(can edit based on length of shot)

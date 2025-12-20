@@ -56,11 +56,11 @@ public class Johnny9 {
     private Drivetrain drive;
     private Telemetry telem;
 
-    public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, launcherMotor;
+    public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, launcherMotor, elevatorMotor;
     public Servo Led;
 
     public VisionPortal eyeofjohnny9;
-    public CRServo intakeServo0/*,intakeServo1, intakeServo2*/,feedServo;
+    public CRServo intakeServo0,intakeServo1, intakeServo2, elevatorServo;
 
     public DcMotor[] allDriveMotors;
     public CRServo[] allIntakeServos;
@@ -115,19 +115,21 @@ public class Johnny9 {
                 motorBackLeft = hwMap.dcMotor.get("motorBackLeft");
                 motorBackRight = hwMap.dcMotor.get("motorBackRight");
                 launcherMotor = hwMap.dcMotor.get("launcherMotor");
-
+                elevatorMotor = hwMap.dcMotor.get("elevatorMotor");
+                elevatorServo = hwMap.crservo.get("elevatorServo");
                 intakeServo0 = hwMap.crservo.get("intakeServo0");
-                //intakeServo1 = hwMap.crservo.get("intakeServo1");
-                //intakeServo2 = hwMap.crservo.get("intakeServo2");
+                intakeServo1 = hwMap.crservo.get("intakeServo1");
+                intakeServo2 = hwMap.crservo.get("intakeServo2");
                 //colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
                 Led=hwMap.servo.get("Led");
-                feedServo=hwMap.get(CRServo.class,"feedServo");
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
-                allIntakeServos = new CRServo[]{intakeServo0/*, intakeServo1, intakeServo2*/};
+                allIntakeServos = new CRServo[]{intakeServo0, intakeServo1, intakeServo2};
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 intakeServo0.setDirection(CRServo.Direction.REVERSE);
-                //intakeServo2.setDirection(DcMotorSimple.Direction.REVERSE);
+                intakeServo2.setDirection(CRServo.Direction.REVERSE);
+                elevatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                elevatorServo.setDirection(CRServo.Direction.REVERSE);
 
 
                 imu = hwMap.get(IMU.class, "imu");
@@ -187,6 +189,7 @@ public class Johnny9 {
                 backLeftPower = (y - x + turn) / denominator;
                 backRightPower = (y + x - turn) / denominator;
                /* telem.addLine("frontLeft:" + frontLeftPower);
+               /* telem.addLine("frontLeft" + frontLeftPower);
                 telem.addLine("FrontRight:" + frontRightPower);
                 telem.addLine("BackLeft:" + backLeftPower);
                 telem.addLine("BackRight:" + backRightPower);
@@ -267,7 +270,7 @@ public class Johnny9 {
     public void moveForwardInches(double inches, double speed) {
 
         //Converts to integer by rounding. CASTS to int after rounding.
-        int tickTarget = (int) Math.round(-inches * Y_INCH_TICKS);
+        int tickTarget = (int) Math.round(inches * Y_INCH_TICKS);
 
         resetDriveEncoders();
 
@@ -344,17 +347,22 @@ public class Johnny9 {
         launcherMotor.setPower(speed);
     }
 
+    public void elevate(double speed){
+        elevatorMotor.setPower(speed);
+        elevatorServo.setPower(speed);
+    }
     public void intakeSystem(double speed){
         for (CRServo x: allIntakeServos){
             x.setPower(speed);
         }
+        elevate(speed);
     }
 
     public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
                 8.75, 8.75, 5.75, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
-                0, -15f, 0, 0);
+                90, -15f, 0, 0);
         aprilTag = new AprilTagProcessor.Builder()
                 .setCameraPose(cameraPosition, cameraOrientation)
                 .build();

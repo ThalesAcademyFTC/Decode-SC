@@ -73,14 +73,7 @@ public class BigJTeleopTest extends OpMode {
         else{
             johnny9.intakeSystem(0);
         }
-        if(gamepad2.dpadUpWasPressed()){
-            johnny9.feedServo.setPower(1);
-        }
-        else if(gamepad2.dpadDownWasPressed()) {
-            johnny9.feedServo.setPower(-1);
-        } else{
-            johnny9.feedServo.setPower(0);
-        }
+
 
 
         // Localization
