@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 @TeleOp(name="BigJTeleop")
-public class BigJTeleop extends LinearOpMode {
+public class BigJRobotCentricTeleop extends LinearOpMode {
     private Johnny9 johnny9;
     AprilTagPoseFtc ftcPose = null;
     Pose3D robotPose = null;

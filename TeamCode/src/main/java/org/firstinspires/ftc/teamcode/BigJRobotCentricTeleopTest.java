@@ -2,18 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.UNKNOWN;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 @TeleOp(name="BigJTeleopTest")
-public class BigJTeleopTest extends OpMode {
+public class BigJRobotCentricTeleopTest extends OpMode {
     private Johnny9 johnny9;
     //AprilTagPoseFtc ftcPose = johnny9.getPos();
     AprilTagPoseFtc ftcPose = null;
@@ -64,15 +61,14 @@ public class BigJTeleopTest extends OpMode {
         //intake system(left trigger
         if (gamepad2.left_trigger > 0) {
             johnny9.intakeSystem(1);
-
-        }
-        //output system
-        if(gamepad2.leftBumperWasPressed()){
-            johnny9.intakeSystem(-1);
-        }
-        else{
+        } else {
             johnny9.intakeSystem(0);
         }
+
+        //output system
+        //if(gamepad2.leftBumperWasPressed()){
+        //    johnny9.intakeSystem(-1);
+        //}
 
 
 
