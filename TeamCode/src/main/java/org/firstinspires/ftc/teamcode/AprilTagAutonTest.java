@@ -23,9 +23,10 @@ public class AprilTagAutonTest extends LinearOpMode {
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
 
-    public static final double FIRINGMAX=100;
-    public static final double FIRINGMIN=80;
-    public static final double FIRINGLEEWAY=20;
+    public static final double FIRINGPERFECTY=90;
+    public static final double FIRINGLEEWAYY=10;
+    public static final double FIRINGPERFECTX=-60;
+    public static final double FIRINGLEEWAYX=5;
     public static final double TURNLEEWAY = 2.5;
     public static final String OBELISK_VALUE_STRING = "obelisk";
     @Override
@@ -65,28 +66,16 @@ public class AprilTagAutonTest extends LinearOpMode {
 
                 if (ftcPose != null) {
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
-                    if(ftcPose.yaw>TURNLEEWAY){
+                    if(ftcPose.yaw>TURNLEEWAY || ftcPose.yaw<-TURNLEEWAY){
                         johnny9.turnLeftDegrees(ftcPose.yaw,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     }
-                    else if(ftcPose.yaw<-TURNLEEWAY){
-                        johnny9.turnRightDegrees(-ftcPose.yaw,speed);
+                    else if(ftcPose.y>FIRINGPERFECTY+FIRINGLEEWAYY || ftcPose.y<FIRINGPERFECTY-FIRINGLEEWAYY){
+                        johnny9.moveForwardInches(ftcPose.y-FIRINGPERFECTY,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     }
-                    else if (ftcPose.x>FIRINGLEEWAY){
-                        johnny9.moveRightInches(ftcPose.x,speed);
-                        johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    }
-                    else if (ftcPose.x<-FIRINGLEEWAY){
-                        johnny9.moveLeftInches(-ftcPose.x,speed);
-                        johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    }
-                    else if(ftcPose.y>FIRINGMAX){
-                        johnny9.moveForwardInches(ftcPose.y-FIRINGMAX,speed);
-                        johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    }
-                    else if(ftcPose.y<FIRINGMIN){
-                        johnny9.moveBackwardInches(FIRINGMIN-ftcPose.y,speed);
+                    else if (ftcPose.x>FIRINGPERFECTX+FIRINGLEEWAYX || ftcPose.x<FIRINGPERFECTX-FIRINGLEEWAYX){
+                        johnny9.moveRightInches(ftcPose.x-FIRINGPERFECTX,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     }
                     else{
@@ -101,19 +90,6 @@ public class AprilTagAutonTest extends LinearOpMode {
                 telemetry.update();
             }
             blackboard.put(OBELISK_VALUE_STRING,obValue);
-            if(johnny9.getTag()==20)//blue team start  on launch line bottom
-            {
-                johnny9.moveForwardInches(72,speed);
-                sleep(rest);
-                johnny9.turnLeftDegrees(45,speed);
-                sleep(rest);
-                johnny9.launchTime(.3);
-                sleep(rest);
-                johnny9.turnRightDegrees(45, speed);
-                sleep(rest);
-                johnny9.moveBackwardInches(18, speed);
-                sleep(rest);
-            }
             if(johnny9.getTag()==24)//red team start on launch line bottom
             {
                 if(johnny9.getObelisk()==GPP){
