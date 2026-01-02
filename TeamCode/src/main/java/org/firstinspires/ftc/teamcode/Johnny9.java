@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import static android.os.SystemClock.sleep;
 
-import com.qualcomm.hardware.rev.RevColorSensorV3;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,10 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
-import com.qualcomm.robotcore.hardware.configuration.WebcamConfiguration;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -80,7 +76,7 @@ public class Johnny9 {
 
     public static final double BLUEPOS=0.555;
     static final double WHITEPOS = 1.0;
-
+    int launchTargetPos=5281;
     //Setup for the Johnny9 teleop AKA BigJ
     public Johnny9(OpMode opmode, Drivetrain drivetrain) {
         this.teleop = opmode;
@@ -138,8 +134,8 @@ public class Johnny9 {
                     ((SwitchableLight) colorSensor).enableLight(true);
                 }*/
                 parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
-                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+                        RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
                 imu.initialize(parameters);
                 break;
 
@@ -345,6 +341,7 @@ public class Johnny9 {
 
     public void launchTime(double speed){
         launcherMotor.setPower(speed);
+
     }
 
     public void elevate(double speed){
@@ -471,4 +468,25 @@ public class Johnny9 {
     double getRotationFR() {return motorFrontLeft.getCurrentPosition();}
     double getRotationBL() {return motorBackLeft.getCurrentPosition();}
     double getRotationBR() {return motorBackRight.getCurrentPosition();}
+
+    void findLauncherZero() {
+        int lastPos=-100000;
+        int currPos=launcherMotor.getCurrentPosition();
+        launcherMotor.setPower(0.2);
+        while(currPos!=lastPos){
+            sleep(100);
+            lastPos=currPos;
+            currPos=launcherMotor.getCurrentPosition();
+        }
+        launcherMotor.setPower(0);
+        launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    void moveToLaunchZero(){
+        launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        launcherMotor.setTargetPosition(launchTargetPos);
+        launcherMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        launcherMotor.setPower(0.5);
+        launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    }
 }
