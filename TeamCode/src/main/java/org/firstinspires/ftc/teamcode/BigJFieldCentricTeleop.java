@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.UNKNOWN;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -21,27 +22,29 @@ public class BigJFieldCentricTeleop extends LinearOpMode{
     private ElapsedTime runtime = new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
     public static final String OBELISK_VALUE_STRING = "obelisk";
-
+    double launchPos;
     boolean ftcTag=true;
     public void runOpMode() throws InterruptedException{
+
+        johnny9.launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Adjust the orientation parameters to match your robot
+
+
+
         waitForStart();
         if(isStopRequested()) return;
         while(opModeIsActive()){
+            launchPos=johnny9.launcherMotor.getCurrentPosition();
             double y=-gamepad1.left_stick_y;
             double x=gamepad1.left_stick_x;
             double rx=gamepad1.right_stick_x;
-            IMU imu = hardwareMap.get(IMU.class, "imu");
-            // Adjust the orientation parameters to match your robot
-            IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                    RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                    RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-            // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
-            imu.initialize(parameters);
-            //
+
+
             if(gamepad1.options){
-                imu.resetYaw();
+                johnny9.imu.resetYaw();
             }
-            double botHeading=imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double botHeading=johnny9.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
             double rotX=x*Math.cos(-botHeading)-y*Math.sin(-botHeading);
             double rotY=x*Math.sin(-botHeading)+y*Math.cos(-botHeading);
@@ -58,6 +61,8 @@ public class BigJFieldCentricTeleop extends LinearOpMode{
             johnny9.motorFrontRight.setPower(frontRightPower);
             johnny9.motorBackLeft.setPower(backLeftPower);
             johnny9.motorBackRight.setPower(backRightPower);
+            telemetry.addData("Launcher Encoder Pos:", launchPos);
+            telemetry.update();
         }
 
 
