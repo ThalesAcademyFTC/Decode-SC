@@ -26,8 +26,6 @@ public class BigJFieldCentricTeleop extends LinearOpMode{
     boolean ftcTag=true;
     public void runOpMode() throws InterruptedException{
 
-        johnny9.launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         // Adjust the orientation parameters to match your robot
 
 
@@ -61,8 +59,6 @@ public class BigJFieldCentricTeleop extends LinearOpMode{
             johnny9.motorFrontRight.setPower(frontRightPower);
             johnny9.motorBackLeft.setPower(backLeftPower);
             johnny9.motorBackRight.setPower(backRightPower);
-            telemetry.addData("Launcher Encoder Pos:", launchPos);
-            telemetry.update();
         }
 
 

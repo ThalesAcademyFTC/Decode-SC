@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
@@ -23,9 +24,9 @@ public class AprilTagAutonTest extends LinearOpMode {
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
 
-    public static final double FIRINGPERFECTY=90;
-    public static final double FIRINGLEEWAYY=10;
-    public static final double FIRINGPERFECTX=-60;
+    //public static final double FIRINGPERFECTY=90;
+    //public static final double FIRINGLEEWAYY=10;
+    //public static final double FIRINGPERFECTX=-60;
     public static final double FIRINGLEEWAYX=5;
     public static final double TURNLEEWAY = 2.5;
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -69,15 +70,20 @@ public class AprilTagAutonTest extends LinearOpMode {
                     if(ftcPose.yaw>TURNLEEWAY || ftcPose.yaw<-TURNLEEWAY){
                         johnny9.turnLeftDegrees(ftcPose.yaw,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    } else if (ftcPose.x>FIRINGLEEWAYX || ftcPose.x<-FIRINGLEEWAYX){
+                        johnny9.moveRightInches(ftcPose.x-FIRINGLEEWAYX, speed);
+                        johnny9.Led.setPosition((johnny9.BLUEPOS));
+                    } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)<=6){
+                        //johnny9.moveForwardInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 6);
                     }
-                    else if(ftcPose.y>FIRINGPERFECTY+FIRINGLEEWAYY || ftcPose.y<FIRINGPERFECTY-FIRINGLEEWAYY){
+                    /*else if(ftcPose.y>FIRINGPERFECTY+FIRINGLEEWAYY || ftcPose.y<FIRINGPERFECTY-FIRINGLEEWAYY){
                         johnny9.moveForwardInches(ftcPose.y-FIRINGPERFECTY,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     }
                     else if (ftcPose.x>FIRINGPERFECTX+FIRINGLEEWAYX || ftcPose.x<FIRINGPERFECTX-FIRINGLEEWAYX){
                         johnny9.moveRightInches(ftcPose.x-FIRINGPERFECTX,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    }
+                    }*/
                     else{
                         sleep(rest);
                         johnny9.Led.setPosition(johnny9.GREENPOS);

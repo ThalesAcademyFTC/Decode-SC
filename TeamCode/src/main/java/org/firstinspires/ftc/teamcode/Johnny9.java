@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import static android.os.SystemClock.sleep;
 
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -55,6 +57,8 @@ public class Johnny9 {
     public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, launcherMotor, elevatorMotor;
     public Servo Led;
 
+    public Rev2mDistanceSensor distanceSensor;
+    public RevColorSensorV3 colorSensor;
     public VisionPortal eyeofjohnny9;
     public CRServo intakeServo0,intakeServo1, intakeServo2, elevatorServo;
 
@@ -116,6 +120,9 @@ public class Johnny9 {
                 intakeServo0 = hwMap.crservo.get("intakeServo0");
                 intakeServo1 = hwMap.crservo.get("intakeServo1");
                 intakeServo2 = hwMap.crservo.get("intakeServo2");
+                colorSensor = hwMap.get(RevColorSensorV3.class, "colorSensor");
+                distanceSensor = hwMap.get(Rev2mDistanceSensor.class, "distanceSensor");
+
                 //colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
                 Led=hwMap.servo.get("Led");
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
@@ -479,9 +486,10 @@ public class Johnny9 {
             currPos=launcherMotor.getCurrentPosition();
         }
         launcherMotor.setPower(0);
+        sleep(1000);
         launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    void moveToLaunchZero(){
+    void moveToLauncherZero(){
         launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launcherMotor.setTargetPosition(launchTargetPos);
         launcherMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
