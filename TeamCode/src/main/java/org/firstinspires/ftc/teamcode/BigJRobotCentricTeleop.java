@@ -28,12 +28,12 @@ public class BigJRobotCentricTeleop extends OpMode {
         telemetry.addData("Launcher Pos", () -> {
             return johnny9.launcherMotor.getCurrentPosition();
         });
-        telemetry.update();
+        telemetry.addData("Ball color: ", () -> {return johnny9.getBallColor();});
         johnny9.initAprilTag();
         johnny9.findLauncherZero();
         johnny9.moveToLauncherZero();
         runtime.reset();
-
+        telemetry.update();
 
     }
 
@@ -45,8 +45,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         double x = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x / 2;
         AprilTagPoseFtc ftcPose = johnny9.getPos();
-        telemetry.addData("Ball color: ", () -> {return johnny9.getBallColor();});
-        telemetry.update();
+
         if (johnny9.getBallColor() == "GREEN"){
             johnny9.Led.setPosition(johnny9.GREENPOS);
         } else if (johnny9.getBallColor() == "PURPLE") {
@@ -74,6 +73,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         } else {
             johnny9.launchTime(0);
             if (gamepad2.rightBumperWasReleased()) {
+                johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 johnny9.moveToLauncherZero();
             }
 
@@ -98,17 +98,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         }
 //e
 
-        // Localization
-        // ftcPose = Johnny9.getPos();
-        if (ftcPose.y <= 60 && ftcPose.y >= 30) {
 
-            ftcPose = johnny9.getPos();
-            telemetry.update();
-
-            // ftcPose = Johnny9.getPos();
-
-
-        }
 
 
     }

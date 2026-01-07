@@ -52,6 +52,7 @@ public class colorSensor extends LinearOpMode {
                 .addData("Saturation", "%.3f", hsvValues[1])//Saturation
                 .addData("Value", "%.3f", hsvValues[2]);//Value
         telemetry.addData("Alpha", "%.3f", colors.alpha);//Light
+
         if(hue>=220 && hue<=240 && sat>=.5 && sat<=1 && value>=0.001 && value<=0.080){
             color = "PURPLE";
         }
@@ -62,6 +63,15 @@ public class colorSensor extends LinearOpMode {
         }
 
         return color;
+
+    }
+    public void getColorRGB(){
+        NormalizedRGBA colors = johnny9.colorSensor.getNormalizedColors();//gets color sensor values
+
+        telemetry.addLine()
+                .addData("Red", "%.3f", colors.red)
+                .addData("Green", "%.3f", colors.green)
+                .addData("Blue", "%.3f", colors.blue);
 
     }
 
