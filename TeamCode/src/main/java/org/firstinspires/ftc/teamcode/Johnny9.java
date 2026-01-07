@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import static android.os.SystemClock.sleep;
 
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -13,6 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -495,6 +498,33 @@ public class Johnny9 {
         launcherMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         launcherMotor.setPower(0.5);
         launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    }
+
+    public String getBallColor(){
+        final float[] hsvValues = new float[3];//hue=0 saturation=1 value=2
+
+        String color = "";
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();//gets color sensor values
+        Color.colorToHSV(colors.toColor(), hsvValues);//update hsv values from the color sensor
+        float hue=hsvValues[0];
+        float sat=hsvValues[1];
+        float value=hsvValues[2];
+        telem.addLine()
+                .addData("Hue", "%.3f", hsvValues[0])//Hue
+                .addData("Saturation", "%.3f", hsvValues[1])//Saturation
+                .addData("Value", "%.3f", hsvValues[2]);//Value
+        telem.addData("Alpha", "%.3f", colors.alpha);//Light
+        if(hue>=220 && hue<=240 && sat>=.5 && sat<=1 && value>=0.001 && value<=0.080){
+            color = "PURPLE";
+        }
+        else if(hue>=150 && hue<=180 && sat>=.75 && sat<=1 && value>=0.001 && value<=0.080){
+            color = "GREEN";
+        }else{
+            color = "NONE";
+        }
+
+        return color;
 
     }
 }
