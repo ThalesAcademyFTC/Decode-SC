@@ -74,17 +74,16 @@ public class AprilTagAutonTest extends LinearOpMode {
                         johnny9.moveRightInches(ftcPose.x-FIRINGLEEWAYX, speed);
                         johnny9.Led.setPosition((johnny9.BLUEPOS));
                     } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)<=6){
-                        //johnny9.moveForwardInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 6);
-                    }
+                        johnny9.moveForwardInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 3, speed);
+                        johnny9.Led.setPosition((johnny9.BLUEPOS));
                     /*else if(ftcPose.y>FIRINGPERFECTY+FIRINGLEEWAYY || ftcPose.y<FIRINGPERFECTY-FIRINGLEEWAYY){
                         johnny9.moveForwardInches(ftcPose.y-FIRINGPERFECTY,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     }
                     else if (ftcPose.x>FIRINGPERFECTX+FIRINGLEEWAYX || ftcPose.x<FIRINGPERFECTX-FIRINGLEEWAYX){
                         johnny9.moveRightInches(ftcPose.x-FIRINGPERFECTX,speed);
-                        johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    }*/
-                    else{
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);*/
+                    } else {
                         sleep(rest);
                         johnny9.Led.setPosition(johnny9.GREENPOS);
                     }

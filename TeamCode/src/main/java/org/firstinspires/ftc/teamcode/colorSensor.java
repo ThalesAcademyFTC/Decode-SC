@@ -1,4 +1,4 @@
-/*package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
@@ -57,6 +57,8 @@ public class colorSensor extends LinearOpMode {
         }
         else if(hue>=150 && hue<=180 && sat>=.75 && sat<=1 && value>=0.001 && value<=0.080){
             color = "GREEN";
+        }else{
+            color = "NONE";
         }
 
         return color;
@@ -65,4 +67,4 @@ public class colorSensor extends LinearOpMode {
 
 
 }
-*/
+
