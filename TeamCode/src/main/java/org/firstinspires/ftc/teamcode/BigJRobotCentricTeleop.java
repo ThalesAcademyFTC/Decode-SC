@@ -90,6 +90,13 @@ public class BigJRobotCentricTeleop extends OpMode {
             johnny9.intakeSystem(0);
         }
 
+        //automatic intake system
+        if (gamepad2.x) {
+            johnny9.runIntakeBallSnatch(1);
+        } else {
+            johnny9.runIntakeBallSnatch(0);
+        }
+
 
         // Localization
         // ftcPose = Johnny9.getPos();

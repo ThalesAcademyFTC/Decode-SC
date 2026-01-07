@@ -527,4 +527,13 @@ public class Johnny9 {
         return color;
 
     }
+    public void runIntakeBallSnatch(double speed){
+
+        if(getBallColor()=="NONE"){
+            intakeSystem(speed);
+        }else if(getBallColor()=="GREEN" && getBallColor()=="PURPLE"){
+
+        }
+
+    }
 }
