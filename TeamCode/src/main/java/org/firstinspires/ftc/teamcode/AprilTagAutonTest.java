@@ -93,7 +93,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                     sleep(rest);
                 }
                 telemetry.update();
-            }
+            }//e
             blackboard.put(OBELISK_VALUE_STRING,obValue);
             if(johnny9.getTag()==24)//red team start on launch line bottom
             {
