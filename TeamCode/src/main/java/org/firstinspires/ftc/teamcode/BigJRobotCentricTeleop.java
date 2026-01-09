@@ -70,13 +70,9 @@ public class BigJRobotCentricTeleop extends OpMode {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             johnny9.launchTime(1);
 
-        } else {
-            johnny9.launchTime(0);
-            if (gamepad2.rightBumperWasReleased()) {
-                johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                johnny9.moveToLauncherZero();
-            }
-
+        } else if (gamepad2.rightBumperWasReleased()) {
+            johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            johnny9.moveToLauncherZero();
         }
 
         //intake and outtake system

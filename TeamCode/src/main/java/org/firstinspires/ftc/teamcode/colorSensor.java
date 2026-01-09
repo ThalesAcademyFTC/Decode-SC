@@ -65,15 +65,7 @@ public class colorSensor extends LinearOpMode {
         return color;
 
     }
-    public void getColorRGB(){
-        NormalizedRGBA colors = johnny9.colorSensor.getNormalizedColors();//gets color sensor values
 
-        telemetry.addLine()
-                .addData("Red", "%.3f", colors.red)
-                .addData("Green", "%.3f", colors.green)
-                .addData("Blue", "%.3f", colors.blue);
-
-    }
 
 
 }
