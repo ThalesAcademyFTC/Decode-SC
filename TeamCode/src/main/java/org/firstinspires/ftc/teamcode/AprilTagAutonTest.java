@@ -37,6 +37,7 @@ public class AprilTagAutonTest extends LinearOpMode {
         runtime.reset();
         double speed=0.5;
         int rest=100;
+        boolean sightToogle=false;
 
         waitForStart();
         if(opModeIsActive()) {
@@ -73,6 +74,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                     } else if (ftcPose.x>FIRINGLEEWAYX || ftcPose.x<-FIRINGLEEWAYX){
                         johnny9.moveRightInches(ftcPose.x-FIRINGLEEWAYX, speed);
                         johnny9.Led.setPosition((johnny9.BLUEPOS));
+                        sightToogle = true;
                     } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)<=6){
                         johnny9.moveForwardInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 3, speed);
                         johnny9.Led.setPosition((johnny9.BLUEPOS));
@@ -83,6 +85,14 @@ public class AprilTagAutonTest extends LinearOpMode {
                     else if (ftcPose.x>FIRINGPERFECTX+FIRINGLEEWAYX || ftcPose.x<FIRINGPERFECTX-FIRINGLEEWAYX){
                         johnny9.moveRightInches(ftcPose.x-FIRINGPERFECTX,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);*/
+                    } else {
+                        sleep(rest);
+                        johnny9.Led.setPosition(johnny9.GREENPOS);
+                    }
+                } else if (sightToogle) {
+                    if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)<=6){
+                        johnny9.moveForwardInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 3, speed);
+                        johnny9.Led.setPosition((johnny9.BLUEPOS));
                     } else {
                         sleep(rest);
                         johnny9.Led.setPosition(johnny9.GREENPOS);
