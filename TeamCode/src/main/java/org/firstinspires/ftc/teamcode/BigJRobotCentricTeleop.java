@@ -28,7 +28,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         telemetry.addData("Launcher Pos", () -> {
             return johnny9.launcherMotor.getCurrentPosition();
         });
-        telemetry.addData("Ball color: ", () -> {return johnny9.getBallColor();});
+        telemetry.addData("Ball color: ", () -> {return johnny9.getBallColorRGB();});
         johnny9.initAprilTag();
         johnny9.findLauncherZero();
         johnny9.moveToLauncherZero();
