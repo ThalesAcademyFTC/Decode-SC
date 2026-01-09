@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import static android.os.SystemClock.sleep;
 
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import android.graphics.Color;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
@@ -505,20 +507,20 @@ public class Johnny9 {
         final float[] hsvValues = new float[3];//hue=0 saturation=1 value=2
 
         String color = "";
-        NormalizedRGBA colors = colorSensor.getNormalizedColors();//gets color sensor values
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();
         Color.colorToHSV(colors.toColor(), hsvValues);//update hsv values from the color sensor
         float hue=hsvValues[0];
         float sat=hsvValues[1];
         float value=hsvValues[2];
         telem.addLine()
-                .addData("Hue", "%.3f", hsvValues[0])//Hue
-                .addData("Saturation", "%.3f", hsvValues[1])//Saturation
-                .addData("Value", "%.3f", hsvValues[2]);//Value
+                .addData("Red", "%.3f", colors.red)//Hue
+                .addData("Blue", "%.3f", colors.blue)//Saturation
+                .addData("Green", "%.3f", colors.green);//Value
         telem.addData("Alpha", "%.3f", colors.alpha);//Light
-        if(hue>=220 && hue<=240 && sat>=.5 && sat<=1 && value>=0.001 && value<=0.080){
+        if(colors.red>=170 && colors.red<=187 && colors.blue>=60 && colors.blue<=70 && colors.green>=215 && colors.green<=225){
             color = "PURPLE";
         }
-        else if(hue>=150 && hue<=180 && sat>=.75 && sat<=1 && value>=0.001 && value<=0.080){
+        else if(colors.red>=10 && colors.red<=20 && colors.blue>=10 && colors.blue<=20 && colors.green>=80 && colors.green<=100){
             color = "GREEN";
         }else{
             color = "NONE";
@@ -535,5 +537,9 @@ public class Johnny9 {
 
         }
 
+    }
+    public NormalizedRGBA getBallColorRGB(){
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();//gets color sensor values
+            return colors;
     }
 }
