@@ -33,7 +33,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         johnny9.findLauncherZero();
         johnny9.moveToLauncherZero();
         runtime.reset();
-        telemetry.update();
+        //telemetry.update();
 
     }
 
@@ -44,7 +44,6 @@ public class BigJRobotCentricTeleop extends OpMode {
         double y = gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x / 2;
-        AprilTagPoseFtc ftcPose = johnny9.getPos();
 
         if (johnny9.getBallColor() == "GREEN"){
             johnny9.Led.setPosition(johnny9.GREENPOS);
@@ -69,9 +68,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         if (gamepad2.right_bumper) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             johnny9.launchTime(1);
-
         } else if (gamepad2.rightBumperWasReleased()) {
-            johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             johnny9.moveToLauncherZero();
         }
 
@@ -89,8 +86,6 @@ public class BigJRobotCentricTeleop extends OpMode {
         //automatic intake system
         if (gamepad2.x) {
             johnny9.runIntakeBallSnatch(1);
-        } else {
-            johnny9.runIntakeBallSnatch(0);
         }
 //e
 

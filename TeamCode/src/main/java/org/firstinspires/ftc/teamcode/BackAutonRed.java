@@ -1,24 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
+import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.GPP;
+import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.PPG;
+import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.UNKNOWN;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
-import java.util.List;
 
 @Autonomous
-public class AprilTagAutonTest extends LinearOpMode {
+public class BackAutonRed extends LinearOpMode {
     private Johnny9 johnny9;
 
     private ElapsedTime runtime=new ElapsedTime();
@@ -64,7 +58,7 @@ public class AprilTagAutonTest extends LinearOpMode {
             while(opModeIsActive()) {
                 // search for goal april tag and turn robot to point straight at it
 
-                ftcPose = johnny9.getPos();
+                ftcPose = johnny9.getPos(24);
 
                 if (ftcPose != null) {
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
@@ -88,6 +82,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                     } else {
                         sleep(rest);
                         johnny9.Led.setPosition(johnny9.GREENPOS);
+                        johnny9.runIntakeBallSnatch(1);
                     }
                 } else if (sightToogle) {
                     if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)<=6){
@@ -96,6 +91,7 @@ public class AprilTagAutonTest extends LinearOpMode {
                     } else {
                         sleep(rest);
                         johnny9.Led.setPosition(johnny9.GREENPOS);
+                        johnny9.runIntakeBallSnatch(1);
                     }
                 } else {
                     // No tag detected

@@ -411,7 +411,7 @@ public class Johnny9 {
         }
     }
 
-    public AprilTagPoseFtc getPos(){
+    public AprilTagPoseFtc getPos(int searchID){
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telem.addData("# AprilTags Detected", currentDetections.size());
         AprilTagPoseFtc pose = null;
@@ -421,7 +421,7 @@ public class Johnny9 {
 
                 telem.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 // Only use tags that don't have Obelisk in them
-                if (!detection.metadata.name.contains("Obelisk")) {
+                if (detection.id == searchID) {
                     pose = detection.ftcPose;
                     telem.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
                             detection.ftcPose.x,
@@ -512,11 +512,11 @@ public class Johnny9 {
         float hue=hsvValues[0];
         float sat=hsvValues[1];
         float value=hsvValues[2];
-        telem.addLine()
-                .addData("Red", "%.3f", colors.red)//Hue
-                .addData("Blue", "%.3f", colors.blue)//Saturation
-                .addData("Green", "%.3f", colors.green);//Value
-        telem.addData("Alpha", "%.3f", colors.alpha);//Light
+        //telem.addLine()
+        //        .addData("Red", "%.3f", colors.red)
+        //        .addData("Blue", "%.3f", colors.blue)
+        //        .addData("Green", "%.3f", colors.green);
+        //telem.addData("Alpha", "%.3f", colors.alpha);//Light
         if(colors.red>=170 && colors.red<=187 && colors.blue>=60 && colors.blue<=70 && colors.green>=215 && colors.green<=225){
             color = "PURPLE";
         }
@@ -533,8 +533,11 @@ public class Johnny9 {
 
         if(getBallColor()=="NONE"){
             intakeSystem(speed);
-        }else if(getBallColor()=="GREEN" && getBallColor()=="PURPLE"){
-
+            launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            moveToLauncherZero();
+        } else if(getBallColor()=="GREEN" || getBallColor()=="PURPLE"){
+            launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            launchTime(speed);
         }
 
     }
