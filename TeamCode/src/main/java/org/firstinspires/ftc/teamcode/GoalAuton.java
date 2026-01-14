@@ -44,7 +44,7 @@ public class GoalAuton extends LinearOpMode {
                         johnny9.runIntakeBallSnatch(1);
                     }
                 telemetry.update();
-            }//e
+            }
         }
         johnny9.visionPortal.close();
 

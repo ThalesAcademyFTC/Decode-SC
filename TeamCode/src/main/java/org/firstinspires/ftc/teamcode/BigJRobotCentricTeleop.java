@@ -28,12 +28,17 @@ public class BigJRobotCentricTeleop extends OpMode {
         telemetry.addData("Launcher Pos", () -> {
             return johnny9.launcherMotor.getCurrentPosition();
         });
+        telemetry.addData("Launcher Mode",()->{return johnny9.launcherMotor.getMode();});
+        telemetry.addData("Launcher Power", () -> {
+            return johnny9.launcherMotor.getPower();
+        });
+
         telemetry.addData("Ball color: ", () -> {return johnny9.getBallColor();});
         johnny9.initAprilTag();
         johnny9.findLauncherZero();
         johnny9.moveToLauncherZero();
         runtime.reset();
-        //telemetry.update();
+        telemetry.update();
 
     }
 
@@ -68,7 +73,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         if (gamepad2.right_bumper) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             johnny9.launchTime(1);
-        } else if (gamepad2.rightBumperWasReleased()) {
+        } else if (gamepad2.rightBumperWasReleased() && johnny9.launcherMotor.getCurrentPosition() < 5281) {
             johnny9.moveToLauncherZero();
         }
 

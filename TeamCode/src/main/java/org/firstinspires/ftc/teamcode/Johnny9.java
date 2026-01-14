@@ -498,8 +498,9 @@ public class Johnny9 {
         launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launcherMotor.setTargetPosition(launchTargetPos);
         launcherMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        launcherMotor.setPower(0.5);
+        launcherMotor.setPower(-0.5);
         launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
@@ -541,8 +542,5 @@ public class Johnny9 {
         }
 
     }
-    public NormalizedRGBA getBallColorRGB(){
-        NormalizedRGBA colors = colorSensor.getNormalizedColors();//gets color sensor values
-            return colors;
-    }
+
 }
