@@ -19,7 +19,7 @@ public class BackAutonBlue extends LinearOpMode {
     //public static final double FIRINGPERFECTY=90;
     //public static final double FIRINGLEEWAYY=10;
     //public static final double FIRINGPERFECTX=-60;
-    public static final double FIRINGLEEWAYX=5;
+    public static final double FIRINGLEEWAYX=3;
     public static final double TURNLEEWAY = 2.5;
     public static final String OBELISK_VALUE_STRING = "obelisk";
     @Override
@@ -55,20 +55,19 @@ public class BackAutonBlue extends LinearOpMode {
             AprilTagPoseFtc ftcPose;
             while(opModeIsActive()) {
                 // search for goal april tag and turn robot to point straight at it
-
+                johnny9.moveRightInches(24, .7);
                 ftcPose = johnny9.getPos(20);
-
                 if (ftcPose != null) {
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
                     if(ftcPose.yaw>TURNLEEWAY || ftcPose.yaw<-TURNLEEWAY){
                         johnny9.turnLeftDegrees(ftcPose.yaw,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (ftcPose.x>FIRINGLEEWAYX || ftcPose.x<-FIRINGLEEWAYX){
-                        johnny9.moveRightInches(ftcPose.x-FIRINGLEEWAYX, speed);
+                        johnny9.moveForwardInches(ftcPose.x-FIRINGLEEWAYX, speed);
                         johnny9.Led.setPosition((johnny9.BLUEPOS));
-                        sightToogle = true;
                     } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)<=6){
-                        johnny9.moveForwardInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 3, speed);
+                        sightToogle = true;
+                        johnny9.moveRightInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 3, speed);
                         johnny9.Led.setPosition((johnny9.BLUEPOS));
                     /*else if(ftcPose.y>FIRINGPERFECTY+FIRINGLEEWAYY || ftcPose.y<FIRINGPERFECTY-FIRINGLEEWAYY){
                         johnny9.moveForwardInches(ftcPose.y-FIRINGPERFECTY,speed);

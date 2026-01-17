@@ -126,6 +126,7 @@ public class Johnny9 {
                 intakeServo1 = hwMap.crservo.get("intakeServo1");
                 intakeServo2 = hwMap.crservo.get("intakeServo2");
                 colorSensor = hwMap.get(RevColorSensorV3.class, "colorSensor");
+               // colorSensor.setGain();
                 distanceSensor = hwMap.get(Rev2mDistanceSensor.class, "distanceSensor");
 
                 //colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
@@ -369,9 +370,9 @@ public class Johnny9 {
 
     public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
-                8.75, 8.75, 5.75, 0);
+                7, 7.5, 12, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
-                90, -15f, 0, 0);
+                90, 0, 30, 0);
         aprilTag = new AprilTagProcessor.Builder()
                 .setCameraPose(cameraPosition, cameraOrientation)
                 .build();
@@ -484,7 +485,7 @@ public class Johnny9 {
     void findLauncherZero() {
         int lastPos=-100000;
         int currPos=launcherMotor.getCurrentPosition();
-        launcherMotor.setPower(0.2);
+        launcherMotor.setPower(0.5);
         while(currPos!=lastPos){
             sleep(100);
             lastPos=currPos;
@@ -496,11 +497,11 @@ public class Johnny9 {
     }
     void moveToLauncherZero(){
         launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        launcherMotor.setTargetPosition(launchTargetPos);
+        launcherMotor.setTargetPosition(launchTargetPos-(launcherMotor.getCurrentPosition()%launchTargetPos)+launcherMotor.getCurrentPosition());
         launcherMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        launcherMotor.setPower(-0.5);
-        launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launcherMotor.setPower(0.5);
+        //launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
@@ -513,16 +514,13 @@ public class Johnny9 {
         float hue=hsvValues[0];
         float sat=hsvValues[1];
         float value=hsvValues[2];
-        //telem.addLine()
-        //        .addData("Red", "%.3f", colors.red)
-        //        .addData("Blue", "%.3f", colors.blue)
-        //        .addData("Green", "%.3f", colors.green);
+
         //telem.addData("Alpha", "%.3f", colors.alpha);//Light
-        if(colors.red>=170 && colors.red<=187 && colors.blue>=60 && colors.blue<=70 && colors.green>=215 && colors.green<=225){
-            color = "PURPLE";
-        }
-        else if(colors.red>=10 && colors.red<=20 && colors.blue>=10 && colors.blue<=20 && colors.green>=80 && colors.green<=100){
+        if(colors.red <= 100|| colors.green >= 225 || colors.blue <= 100){
             color = "GREEN";
+        }
+        else if(hue>=115 && hue<=120 && sat>=95 && sat<=100 && value>=45 && value<=50){
+            color = "Purple durple nurple gurple clurple ";
         }else{
             color = "NONE";
         }
@@ -531,15 +529,20 @@ public class Johnny9 {
 
     }
     public void runIntakeBallSnatch(double speed){
-
-        if(getBallColor()=="NONE"){
+        while(!isBallDetected()) {
             intakeSystem(speed);
             launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             moveToLauncherZero();
-        } else if(getBallColor()=="GREEN" || getBallColor()=="PURPLE"){
-            launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            launchTime(speed);
         }
+        sleep(100);
+        intakeSystem(0);
+        launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launchTime(speed);
+        sleep(2000);
+        launchTime(0);
+    }
+    public boolean isBallDetected(){
+        return colorSensor.getDistance(DistanceUnit.MM) < 152.00;
 
     }
 
