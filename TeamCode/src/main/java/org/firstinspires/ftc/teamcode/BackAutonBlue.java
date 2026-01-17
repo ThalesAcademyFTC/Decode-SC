@@ -17,7 +17,7 @@ public class BackAutonBlue extends LinearOpMode {
     public Johnny9.Obelisk obValue = UNKNOWN;
 
     //public static final double FIRINGPERFECTY=90;
-    //public static final double FIRINGLEEWAYY=10;
+    public static final double FIRINGLEEWAYY=2;
     //public static final double FIRINGPERFECTX=-60;
     public static final double FIRINGLEEWAYX=3;
     public static final double TURNLEEWAY = 2.5;
@@ -53,9 +53,9 @@ public class BackAutonBlue extends LinearOpMode {
                 telemetry.update();
             }*/
             AprilTagPoseFtc ftcPose;
+            //johnny9.moveRightInches(24, .7);
             while(opModeIsActive()) {
                 // search for goal april tag and turn robot to point straight at it
-                johnny9.moveRightInches(24, .7);
                 ftcPose = johnny9.getPos(20);
                 if (ftcPose != null) {
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
@@ -63,11 +63,11 @@ public class BackAutonBlue extends LinearOpMode {
                         johnny9.turnLeftDegrees(ftcPose.yaw,speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (ftcPose.x>FIRINGLEEWAYX || ftcPose.x<-FIRINGLEEWAYX){
-                        johnny9.moveForwardInches(ftcPose.x-FIRINGLEEWAYX, speed);
+                        johnny9.moveBackwardInches(ftcPose.x-FIRINGLEEWAYX, speed);
                         johnny9.Led.setPosition((johnny9.BLUEPOS));
-                    } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)<=6){
+                    } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)>FIRINGLEEWAYY){
                         sightToogle = true;
-                        johnny9.moveRightInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 3, speed);
+                        johnny9.moveRightInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGLEEWAYY, speed);
                         johnny9.Led.setPosition((johnny9.BLUEPOS));
                     /*else if(ftcPose.y>FIRINGPERFECTY+FIRINGLEEWAYY || ftcPose.y<FIRINGPERFECTY-FIRINGLEEWAYY){
                         johnny9.moveForwardInches(ftcPose.y-FIRINGPERFECTY,speed);
@@ -82,8 +82,8 @@ public class BackAutonBlue extends LinearOpMode {
                         johnny9.runIntakeBallSnatch(1);
                     }
                 } else if (sightToogle) {
-                    if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)<=6){
-                        johnny9.moveForwardInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - 3, speed);
+                    if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)>FIRINGLEEWAYY){
+                        johnny9.moveRightInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGLEEWAYY, speed);
                         johnny9.Led.setPosition((johnny9.BLUEPOS));
                     } else {
                         sleep(rest);

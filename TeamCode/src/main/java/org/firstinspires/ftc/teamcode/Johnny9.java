@@ -361,6 +361,9 @@ public class Johnny9 {
         elevatorMotor.setPower(speed);
         elevatorServo.setPower(speed);
     }
+    public void launcherKick(double lowerSpeed){
+        elevatorServo.setPower(-lowerSpeed);
+    }
     public void intakeSystem(double speed){
         for (CRServo x: allIntakeServos){
             x.setPower(speed);
@@ -485,7 +488,7 @@ public class Johnny9 {
     void findLauncherZero() {
         int lastPos=-100000;
         int currPos=launcherMotor.getCurrentPosition();
-        launcherMotor.setPower(0.5);
+        launcherMotor.setPower(0.3);
         while(currPos!=lastPos){
             sleep(100);
             lastPos=currPos;
@@ -534,7 +537,7 @@ public class Johnny9 {
             launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             moveToLauncherZero();
         }
-        sleep(100);
+        sleep(150);
         intakeSystem(0);
         launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         launchTime(speed);
