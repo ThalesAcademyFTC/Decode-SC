@@ -31,7 +31,7 @@ public class BigJRobotCentricTeleop extends OpMode {
             return johnny9.launcherMotor.getCurrentPosition();
         });
         telemetry.addData("Launcher Target Pos", () -> {
-            return johnny9.launchTargetPos;
+            return johnny9.LAUNCHTARGETPOS;
         });
         telemetry.addData("Launcher Mode",()->{return johnny9.launcherMotor.getMode();});
         telemetry.addData("Launcher Power", () -> {

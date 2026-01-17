@@ -59,9 +59,8 @@ public class Johnny9 {
 
     public DcMotor motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, launcherMotor, elevatorMotor;
     public Servo Led;
-
-    public Rev2mDistanceSensor distanceSensor;
     public RevColorSensorV3 colorSensor;
+    public Rev2mDistanceSensor distanceSensor;
     public VisionPortal eyeofjohnny9;
     public CRServo intakeServo0, intakeServo1, intakeServo2, elevatorServo;
 
@@ -83,7 +82,7 @@ public class Johnny9 {
 
     public static final double BLUEPOS = 0.555;
     static final double WHITEPOS = 1.0;
-    static final int LAUNCHTARGETPOS = 5281;
+  public static  final int LAUNCHTARGETPOS = 5281;
 
     //Setup for the Johnny9 teleop AKA BigJ
     public Johnny9(OpMode opmode, Drivetrain drivetrain) {
@@ -258,12 +257,14 @@ public class Johnny9 {
         boolean finished = false;
         while (auton.opModeIsActive() && !finished && !auton.isStopRequested()) {
             if (motorFrontLeft.isBusy() || motorBackLeft.isBusy() || motorFrontRight.isBusy() || motorBackRight.isBusy()) {
-                telem.addData("front left encoder:", motorFrontLeft.getCurrentPosition());
+                /*telem.addData("front left encoder:", motorFrontLeft.getCurrentPosition());
                 telem.addData("front right encoder:", motorFrontRight.getCurrentPosition());
                 telem.addData("back left encoder:", motorBackLeft.getCurrentPosition());
-                telem.addData("back right encoder:", motorBackRight.getCurrentPosition());
-
-                telem.update();
+                telem.addData("back right encoder:", motorBackRight.getCurrentPosition());*/
+                if (getPos(24) != null) {
+                    telem.addData("Pose x:", getPos(24));
+                    telem.update();
+                }
             } else {
                 finished = true;
             }
@@ -377,7 +378,7 @@ public class Johnny9 {
 
     public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
-                7, 7.5, 12, 0);
+                -7, 7.5, 12, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
                 90, 0, 30, 0);
         aprilTag = new AprilTagProcessor.Builder()
@@ -511,13 +512,12 @@ public class Johnny9 {
             currPos = launcherMotor.getCurrentPosition();
         }
         launcherMotor.setPower(0);
-        sleep(1000);
+        sleep(1250);
         launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     void moveToLauncherZero() {
-        if (launcherMotor.getCurrentPosition() % LAUNCHTARGETPOS >= 1000)
-            launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launcherMotor.setTargetPosition(LAUNCHTARGETPOS - (launcherMotor.getCurrentPosition() % LAUNCHTARGETPOS) + launcherMotor.getCurrentPosition());
         launcherMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         launcherMotor.setPower(0.5);
@@ -563,7 +563,7 @@ public class Johnny9 {
     }
 
     public boolean isBallDetected() {
-        return colorSensor.getDistance(DistanceUnit.MM) < 152.00;
+        return colorSensor.getDistance(DistanceUnit.MM) < 140.00;
 
     }
 }

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 @Autonomous
-public class BackAutonRed extends LinearOpMode {
+public class IcarusAutonRed extends LinearOpMode {
     private Johnny9 johnny9;
 
     private ElapsedTime runtime=new ElapsedTime();
