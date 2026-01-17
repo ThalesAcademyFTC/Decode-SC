@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.UNKNOWN;
+//import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.UNKNOWN;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,7 +10,7 @@ public class Auton  extends LinearOpMode {
     private Johnny9 johnny9;
 
     private ElapsedTime runtime = new ElapsedTime();
-    public Johnny9.Obelisk obValue = UNKNOWN;
+    //public Johnny9.Obelisk obValue = UNKNOWN;
     public static final String OBELISK_VALUE_STRING = "obelisk";
 
     @Override
@@ -22,14 +22,19 @@ public class Auton  extends LinearOpMode {
 
         waitForStart();
 //e
-        johnny9.launchTime(speed);
+        johnny9.runIntakeBallSnatch(speed);
         sleep(rest);
-        johnny9.moveBackwardInches(24,speed);
+        johnny9.moveForwardInches(2,speed);
+        sleep(rest);
+        johnny9.moveBackwardInches(2,speed);
+        sleep(rest);
+        johnny9.moveLeftInches(2,speed);
+        sleep(rest);
+        johnny9.moveRightInches(2,speed);
+        sleep(rest);
+        johnny9.turnLeftDegrees(45,speed);
         sleep(rest);
         johnny9.turnRightDegrees(45,speed);
-        sleep(rest);
-        johnny9.moveLeftInches(24,speed);
-
 
 
 

@@ -97,25 +97,6 @@ public class BackAutonBlue extends LinearOpMode {
                 }
                 telemetry.update();
             }//e
-            blackboard.put(OBELISK_VALUE_STRING,obValue);
-            if(johnny9.getTag()==24)//red team start on launch line bottom
-            {
-                if(johnny9.getObelisk()==GPP){
-                    // if statement saying if the color is green, put it in the launcher
-                }
-                else if(johnny9.getObelisk()==PPG){
-                    //if statement saying if the first color is purple
-                }
-                johnny9.moveForwardInches(72, speed);
-                sleep(rest);
-                johnny9.turnRightDegrees(45, speed);
-                sleep(rest);
-                johnny9.launchTime(speed);
-                sleep(rest);
-                johnny9.moveBackwardInches(18,speed);
-                sleep(rest);
-
-            }
 
         }
         johnny9.visionPortal.close();

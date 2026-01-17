@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import static android.os.SystemClock.sleep;
 
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import android.graphics.Color;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
@@ -65,11 +63,11 @@ public class Johnny9 {
     public Rev2mDistanceSensor distanceSensor;
     public RevColorSensorV3 colorSensor;
     public VisionPortal eyeofjohnny9;
-    public CRServo intakeServo0,intakeServo1, intakeServo2, elevatorServo;
+    public CRServo intakeServo0, intakeServo1, intakeServo2, elevatorServo;
 
     public DcMotor[] allDriveMotors;
     public CRServo[] allIntakeServos;
-   // public NormalizedColorSensor colorSensor;
+    // public NormalizedColorSensor colorSensor;
 
     public IMU imu;
     private IMU.Parameters parameters;
@@ -83,9 +81,10 @@ public class Johnny9 {
     public static final double GREENPOS = 0.485;
     public static final double REDPOS = 0.280;
 
-    public static final double BLUEPOS=0.555;
+    public static final double BLUEPOS = 0.555;
     static final double WHITEPOS = 1.0;
-    int launchTargetPos=5281;
+    static final int LAUNCHTARGETPOS = 5281;
+
     //Setup for the Johnny9 teleop AKA BigJ
     public Johnny9(OpMode opmode, Drivetrain drivetrain) {
         this.teleop = opmode;
@@ -126,11 +125,11 @@ public class Johnny9 {
                 intakeServo1 = hwMap.crservo.get("intakeServo1");
                 intakeServo2 = hwMap.crservo.get("intakeServo2");
                 colorSensor = hwMap.get(RevColorSensorV3.class, "colorSensor");
-               // colorSensor.setGain();
+                // colorSensor.setGain();
                 distanceSensor = hwMap.get(Rev2mDistanceSensor.class, "distanceSensor");
 
                 //colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
-                Led=hwMap.servo.get("Led");
+                Led = hwMap.servo.get("Led");
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
                 allIntakeServos = new CRServo[]{intakeServo0, intakeServo1, intakeServo2};
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -181,20 +180,20 @@ public class Johnny9 {
         motorFrontRight.setPower(0);
     }
 
-    public void move(double x, double y, double turn){
+    public void move(double x, double y, double turn) {
         double denominator;
         double frontLeftPower;
         double frontRightPower;
         double backLeftPower;
         double backRightPower;
 
-        switch(drive){
+        switch (drive) {
             //Johnny 9 movement code AKA BigJ
             case JOHNNY9:
                 denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(turn), 1);
 
                 frontLeftPower = (y + x + turn) / denominator;
-                frontRightPower = (y - x - turn) /denominator;
+                frontRightPower = (y - x - turn) / denominator;
                 backLeftPower = (y - x + turn) / denominator;
                 backRightPower = (y + x - turn) / denominator;
                /* telem.addLine("frontLeft:" + frontLeftPower);
@@ -219,7 +218,7 @@ public class Johnny9 {
                 denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(turn), 1);
 
                 frontLeftPower = (y + x + turn) / denominator;
-                frontRightPower = (y - x - turn) /denominator;
+                frontRightPower = (y - x - turn) / denominator;
                 backLeftPower = (y - x + turn) / denominator;
                 backRightPower = (y + x - turn) / denominator;
                 /*telem.addLine("frontLeft:" + frontLeftPower);
@@ -240,12 +239,15 @@ public class Johnny9 {
         }
     }
 
-    public void resetYaw() {imu.resetYaw();}
+    public void resetYaw() {
+        imu.resetYaw();
+    }
+
     public double getHeading() {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
-    public void addSensorTelemetry(){
+    public void addSensorTelemetry() {
         telem.addData("motor front left position ", this::getRotationFL);
         telem.addData("motor front right position", this::getRotationFR);
         telem.addData("motor back left position", this::getRotationBL);
@@ -269,7 +271,7 @@ public class Johnny9 {
     }
 
     private void resetDriveEncoders() {
-        for (DcMotor x: allDriveMotors) {
+        for (DcMotor x : allDriveMotors) {
             x.setPower(0);
             x.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             x.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -326,7 +328,7 @@ public class Johnny9 {
         moveRightInches(-inches, -speed);
     }
 
-    public void turnRightDegrees(double degrees, double speed){
+    public void turnRightDegrees(double degrees, double speed) {
         int tickTarget = (int) Math.round(degrees * X_DEGREE_TICKS);
 
         resetDriveEncoders();
@@ -348,24 +350,26 @@ public class Johnny9 {
         resetDriveEncoders();
     }
 
-    public void turnLeftDegrees(double degrees, double speed){
+    public void turnLeftDegrees(double degrees, double speed) {
         turnRightDegrees(-degrees, -speed);
     }
 
-    public void launchTime(double speed){
+    public void launchTime(double speed) {
         launcherMotor.setPower(speed);
 
     }
 
-    public void elevate(double speed){
+    public void elevate(double speed) {
         elevatorMotor.setPower(speed);
         elevatorServo.setPower(speed);
     }
-    public void launcherKick(double lowerSpeed){
+
+    public void launcherKick(double lowerSpeed) {
         elevatorServo.setPower(-lowerSpeed);
     }
-    public void intakeSystem(double speed){
-        for (CRServo x: allIntakeServos){
+
+    public void intakeSystem(double speed) {
+        for (CRServo x : allIntakeServos) {
             x.setPower(speed);
         }
         elevate(speed);
@@ -415,7 +419,7 @@ public class Johnny9 {
         }
     }
 
-    public AprilTagPoseFtc getPos(int searchID){
+    public AprilTagPoseFtc getPos(int searchID) {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telem.addData("# AprilTags Detected", currentDetections.size());
         AprilTagPoseFtc pose = null;
@@ -447,7 +451,8 @@ public class Johnny9 {
         telem.addLine("PRY = Pitch, Roll & Yaw (Rotation on XYZ)");
         return pose;
     }
-    public Pose3D getRobotPos(){
+
+    public Pose3D getRobotPos() {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telem.addData("# AprilTags Detected", currentDetections.size());
         Pose3D pose = null;
@@ -480,35 +485,47 @@ public class Johnny9 {
         return pose;
     }
 
-    double getRotationFL() {return motorFrontLeft.getCurrentPosition();}
-    double getRotationFR() {return motorFrontLeft.getCurrentPosition();}
-    double getRotationBL() {return motorBackLeft.getCurrentPosition();}
-    double getRotationBR() {return motorBackRight.getCurrentPosition();}
+    double getRotationFL() {
+        return motorFrontLeft.getCurrentPosition();
+    }
+
+    double getRotationFR() {
+        return motorFrontLeft.getCurrentPosition();
+    }
+
+    double getRotationBL() {
+        return motorBackLeft.getCurrentPosition();
+    }
+
+    double getRotationBR() {
+        return motorBackRight.getCurrentPosition();
+    }
 
     void findLauncherZero() {
-        int lastPos=-100000;
-        int currPos=launcherMotor.getCurrentPosition();
+        int lastPos = -100000;
+        int currPos = launcherMotor.getCurrentPosition();
         launcherMotor.setPower(0.3);
-        while(currPos!=lastPos){
+        while (currPos != lastPos) {
             sleep(100);
-            lastPos=currPos;
-            currPos=launcherMotor.getCurrentPosition();
+            lastPos = currPos;
+            currPos = launcherMotor.getCurrentPosition();
         }
         launcherMotor.setPower(0);
         sleep(1000);
         launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    void moveToLauncherZero(){
-        launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        launcherMotor.setTargetPosition(launchTargetPos-(launcherMotor.getCurrentPosition()%launchTargetPos)+launcherMotor.getCurrentPosition());
+
+    void moveToLauncherZero() {
+        if (launcherMotor.getCurrentPosition() % LAUNCHTARGETPOS >= 1000)
+            launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        launcherMotor.setTargetPosition(LAUNCHTARGETPOS - (launcherMotor.getCurrentPosition() % LAUNCHTARGETPOS) + launcherMotor.getCurrentPosition());
         launcherMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         launcherMotor.setPower(0.5);
-        //launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
+    //launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    //launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-    public String getBallColor(){
+    /*public String getBallColor(){
         final float[] hsvValues = new float[3];//hue=0 saturation=1 value=2
 
         String color = "";
@@ -530,9 +547,9 @@ public class Johnny9 {
 
         return color;
 
-    }
-    public void runIntakeBallSnatch(double speed){
-        while(!isBallDetected()) {
+    }*/
+    public void runIntakeBallSnatch(double speed) {
+        while (!isBallDetected()) {
             intakeSystem(speed);
             launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             moveToLauncherZero();
@@ -542,11 +559,11 @@ public class Johnny9 {
         launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         launchTime(speed);
         sleep(2000);
-        launchTime(0);
+        moveToLauncherZero();
     }
-    public boolean isBallDetected(){
+
+    public boolean isBallDetected() {
         return colorSensor.getDistance(DistanceUnit.MM) < 152.00;
 
     }
-
 }
