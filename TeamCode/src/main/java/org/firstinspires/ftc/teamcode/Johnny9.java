@@ -549,10 +549,17 @@ public class Johnny9 {
 
     }*/
     public void runIntakeBallSnatch(double speed) {
+        int ballCheck = 0;
         while (!isBallDetected()) {
             intakeSystem(speed);
             launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             moveToLauncherZero();
+            ballCheck++;
+            sleep(50);
+            if (ballCheck >= 60){
+                intakeSystem(0);
+                break;
+            }
         }
         sleep(150);
         intakeSystem(0);

@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -19,6 +20,8 @@ public class IcarusAutonBlue extends LinearOpMode {
     public static final double FIRINGLEEWAYY=6;
     public static final double FIRINGLEEWAYX=3;
     public static final double TURNLEEWAY = 2.5;
+    public static final double INTAKELEEWAYY=2;
+    public static final double INTAKEPERFECTY=30;
     public static final String OBELISK_VALUE_STRING = "obelisk";
     @Override
     public void runOpMode(){
@@ -28,6 +31,7 @@ public class IcarusAutonBlue extends LinearOpMode {
         double speed=0.5;
         int rest=100;
         boolean sightToogle=false;
+        boolean fireToogle =false;
 
         waitForStart();
         if(opModeIsActive()) {
@@ -52,7 +56,7 @@ public class IcarusAutonBlue extends LinearOpMode {
             }*/
             AprilTagPoseFtc ftcPose;
             //johnny9.moveRightInches(24, .7);
-            while(opModeIsActive()) {
+            while (!fireToogle) {
                 // search for goal april tag and turn robot to point straight at it
 
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
@@ -62,38 +66,34 @@ public class IcarusAutonBlue extends LinearOpMode {
                     telemetry.addData("X: %f", ftcPose.x);
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
                     telemetry.update();
-                    if(ftcPose.yaw>TURNLEEWAY || ftcPose.yaw<-TURNLEEWAY){
-                        johnny9.turnLeftDegrees(ftcPose.yaw,speed);
+                    if (ftcPose.yaw > TURNLEEWAY || ftcPose.yaw < -TURNLEEWAY) {
+                        johnny9.turnLeftDegrees(ftcPose.yaw, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    } else if (ftcPose.x>FIRINGLEEWAYX || ftcPose.x<-FIRINGLEEWAYX){
-                        johnny9.moveBackwardInches(ftcPose.x/2.5, speed);
+                    } else if (ftcPose.x > FIRINGLEEWAYX || ftcPose.x < -FIRINGLEEWAYX) {
+                        johnny9.moveBackwardInches(ftcPose.x, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)>FIRINGLEEWAYY){
+                    } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) > FIRINGLEEWAYY) {
                         sightToogle = true;
-                        if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)>=300){
+                        if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
                             johnny9.moveRightInches(50, speed);
                         } else {
                             johnny9.moveRightInches((johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGLEEWAYY), speed);
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else {
-                        sleep(rest);
-                        johnny9.Led.setPosition(johnny9.GREENPOS);
-                        johnny9.runIntakeBallSnatch(1);
+                        fireToogle = true;
                     }
                 } else if (sightToogle) {
-                    if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)>FIRINGLEEWAYY){
+                    if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) > FIRINGLEEWAYY) {
                         sightToogle = true;
-                        if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH)>=300){
+                        if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
                             johnny9.moveRightInches(50, speed);
                         } else {
                             johnny9.moveRightInches((johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGLEEWAYY), speed);
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else {
-                        sleep(rest);
-                        johnny9.Led.setPosition(johnny9.GREENPOS);
-                        johnny9.runIntakeBallSnatch(1);
+                        fireToogle = true;
                     }
                 } else {
                     // No tag detected
@@ -101,6 +101,16 @@ public class IcarusAutonBlue extends LinearOpMode {
                     sleep(rest);
                 }
             }
+            sleep(rest);
+            johnny9.Led.setPosition(johnny9.GREENPOS);
+            while (johnny9.launcherMotor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER){
+                johnny9.runIntakeBallSnatch(1);
+            }
+            fireToogle = false;
+            johnny9.Led.setPosition(johnny9.BLUEPOS);
+            /*while(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - INTAKEPERFECTY >= INTAKELEEWAYY || johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - INTAKEPERFECTY <= INTAKELEEWAYY) {
+                johnny9.moveRightInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH)-INTAKEPERFECTY);
+            }*/
 
         }
         johnny9.visionPortal.close();
