@@ -10,6 +10,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -378,7 +379,7 @@ public class Johnny9 {
 
     public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
-                -7, 7.5, 12, 0);
+                0, 6, 12, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
                 90, 0, 30, 0);
         aprilTag = new AprilTagProcessor.Builder()
@@ -561,11 +562,16 @@ public class Johnny9 {
                 break;
             }
         }
-        sleep(150);
-        intakeSystem(0);
-        launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        launchTime(speed);
-        sleep(2000);
+        if(isBallDetected()) {
+            sleep(150);
+            intakeSystem(0);
+            launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            launchTime(speed);
+        }
+    }
+    public void runIntakeBallReset(double speed){
+        runIntakeBallSnatch(speed);
+        sleep(1500);
         moveToLauncherZero();
     }
 

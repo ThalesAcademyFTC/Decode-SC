@@ -21,7 +21,7 @@ public class IcarusAutonBlue extends LinearOpMode {
     public static final double FIRINGLEEWAYX=3;
     public static final double TURNLEEWAY = 2.5;
     public static final double INTAKELEEWAYY=2;
-    public static final double INTAKEPERFECTY=30;
+    public static final double INTAKEPERFECTY=40;
     public static final String OBELISK_VALUE_STRING = "obelisk";
     @Override
     public void runOpMode(){
@@ -35,25 +35,6 @@ public class IcarusAutonBlue extends LinearOpMode {
 
         waitForStart();
         if(opModeIsActive()) {
-            /*while(opModeIsActive() && obValue == UNKNOWN) {
-                obValue = johnny9.getObelisk();
-                switch (obValue) {
-                    case GPP:
-                        telemetry.addLine("found green, purple, purple");
-                        break;
-                    case PGP:
-                        telemetry.addLine("found purple, green, purple");
-                        break;
-                    case PPG:
-                        telemetry.addLine("found purple, purple, green");
-                        break;
-                    case UNKNOWN:
-                        telemetry.addLine("null");
-                        johnny9.rest();
-                        break;
-                }
-                telemetry.update();
-            }*/
             AprilTagPoseFtc ftcPose;
             //johnny9.moveRightInches(24, .7);
             while (!fireToogle) {
@@ -108,9 +89,10 @@ public class IcarusAutonBlue extends LinearOpMode {
             }
             fireToogle = false;
             johnny9.Led.setPosition(johnny9.BLUEPOS);
-            /*while(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - INTAKEPERFECTY >= INTAKELEEWAYY || johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - INTAKEPERFECTY <= INTAKELEEWAYY) {
-                johnny9.moveRightInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH)-INTAKEPERFECTY);
-            }*/
+            while(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - INTAKEPERFECTY >= INTAKELEEWAYY || johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - INTAKEPERFECTY <= INTAKELEEWAYY) {
+                johnny9.moveRightInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH)-INTAKEPERFECTY, 1);
+            }
+
 
         }
         johnny9.visionPortal.close();
