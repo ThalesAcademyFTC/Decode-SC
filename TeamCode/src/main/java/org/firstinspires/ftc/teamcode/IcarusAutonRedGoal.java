@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import static android.os.SystemClock.sleep;
 import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -20,7 +21,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
     public static final double LEEWAYX =3;
     public static final double TURNLEEWAY = 2.5;
     public static final double DISTANCELEEWAYY =2;
-    public static final double DISTANCEPERFECTY =40;
+    public static final double DISTANCEPERFECTY =35;
     public static final double INTAKEPERFECTY=40;
     public static final double INTAKEPERFECTX=40;
     public static final double INTAKESETUPTURN=-45;
@@ -41,28 +42,68 @@ public class IcarusAutonRedGoal extends LinearOpMode {
 
         waitForStart();
         if(opModeIsActive()) {
+            // Fire until it doesn't detect any balls (Check if the function ends early)
             johnny9.Led.setPosition(johnny9.GREENPOS);
             johnny9.moveLeftInches(3,.5);
-            while (johnny9.launcherMotor.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
-                johnny9.runIntakeBallSnatch(1);
-            }
+            johnny9.runIntakeBallSnatch(1);
+            sleep(1000);
+            johnny9.runIntakeBallSnatch(1);
+            sleep(1000);
+            johnny9.runIntakeBallSnatch(1);
+            // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
-            while (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - DISTANCEPERFECTY >= DISTANCELEEWAYY || johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - DISTANCEPERFECTY <= DISTANCELEEWAYY) {
+            while (Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - DISTANCEPERFECTY) >= DISTANCELEEWAYY) {
                 johnny9.moveRightInches(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - DISTANCEPERFECTY, 1);
             }
             AprilTagPoseFtc ftcPose=johnny9.getPos(24);
             if(ftcPose != null) {
                 johnny9.turnLeftDegrees(ftcPose.yaw - INTAKESETUPTURN, .7);
             }
+            // Manages the Turn, Y, and X values, moving and fixing them up in that order.
             while (!taskToogle) {
+                telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
+                ftcPose = johnny9.getPos(24);
+                telemetry.update();
+                if (ftcPose != null) {
+                    if (ftcPose.yaw-INTAKEPERFECTTURN>TURNLEEWAY || ftcPose.yaw-INTAKEPERFECTTURN<-TURNLEEWAY){
+                        johnny9.turnLeftDegrees(ftcPose.yaw-INTAKEPERFECTTURN, speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    } else if(ftcPose.y-INTAKEPERFECTY>LEEWAYY || ftcPose.y-INTAKEPERFECTY<-LEEWAYY) {
+                        johnny9.moveRightInches(ftcPose.y-INTAKEPERFECTY, speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    } else if (ftcPose.x-INTAKEPERFECTX>LEEWAYX || ftcPose.x-INTAKEPERFECTX<-LEEWAYX) {
+                        johnny9.moveBackwardInches(ftcPose.x, speed);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    } else {
+                        taskToogle = true;
+                    }
+                } else {
+                    // No tag detected
+                    johnny9.Led.setPosition(johnny9.REDPOS);
+                    sleep(rest);
+                }
+            johnny9.turnLeftDegrees(180, .8);
+            sleep(rest);
+            johnny9.intakeSystem(speed);
+            johnny9.moveForwardInches(8,.3);
+            johnny9.intakeSystem(speed);
+            sleep(rest);
+            johnny9.turnLeftDegrees(180,.8);
+            taskToogle=false;
+            while (!taskToogle) {
+            // search for goal april tag and turn robot to point straight at it, basic fire setup code
+
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 ftcPose = johnny9.getPos(24);
                 if (ftcPose != null) {
-                    if (ftcPose.y-INTAKEPERFECTY>LEEWAYY|| ftcPose.y-INTAKEPERFECTY<-LEEWAYY) {
-                        johnny9.moveRightInches(ftcPose.y-INTAKEPERFECTY, speed);
+                    telemetry.addData("X: %f", ftcPose.x);
+                    telemetry.addData("Yaw: %f", ftcPose.yaw);
+                    telemetry.update();
+                    if (ftcPose.yaw > TURNLEEWAY || ftcPose.yaw < -TURNLEEWAY) {
+                        johnny9.turnLeftDegrees(ftcPose.yaw, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    } /*else if (ftcPose.x > LEEWAYX || ftcPose.x < -LEEWAYX) {
+                    } else if (ftcPose.x > LEEWAYX || ftcPose.x < -LEEWAYX) {
                         johnny9.moveBackwardInches(ftcPose.x, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) > LEEWAYY) {
@@ -70,18 +111,40 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                         if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
                             johnny9.moveRightInches(50, speed);
                         } else {
-                            johnny9.moveRightInches((johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGLEEWAYY), speed);
+                            johnny9.moveRightInches((johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - LEEWAYY), speed);
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else {
                         taskToogle = true;
-                    }*/
+                    }
+                // If it can't see the april tag but knows it's aligned, keep moving forward.
+                // This is because it can't see if it's too close.
+                } else if (sightToogle) {
+                    if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) > LEEWAYY) {
+                        sightToogle = true;
+                        if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
+                            johnny9.moveRightInches(50, speed);
+                        } else {
+                            johnny9.moveRightInches((johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - LEEWAYY), speed);
+                        }
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                    } else {
+                        taskToogle = true;
+                    }
                 } else {
                     // No tag detected
                     johnny9.Led.setPosition(johnny9.REDPOS);
                     sleep(rest);
                 }
             }
+            //FIRE
+            sleep(rest);
+            johnny9.Led.setPosition(johnny9.GREENPOS);
+            while (opModeIsActive()) {
+                johnny9.runIntakeBallSnatch(1);
+            }
+
+        }
 
             johnny9.visionPortal.close();
         }

@@ -358,12 +358,15 @@ public class Johnny9 {
 
     public void launchTime(double speed) {
         launcherMotor.setPower(speed);
-
     }
 
     public void elevate(double speed) {
         elevatorMotor.setPower(speed);
-        elevatorServo.setPower(speed);
+        if (!isBallDetected()){
+            elevatorServo.setPower(speed);
+        } else {
+            elevatorServo.setPower(0);
+        }
     }
 
     public void launcherKick(double lowerSpeed) {
