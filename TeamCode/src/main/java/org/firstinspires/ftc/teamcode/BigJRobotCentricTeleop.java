@@ -85,6 +85,9 @@ public class BigJRobotCentricTeleop extends OpMode {
             johnny9.intakeSystem(1);
         } else if (gamepad2.dpad_down) {
             johnny9.intakeSystem(-1);
+        } else if (gamepad2.left_trigger > 0) {
+            johnny9.intakeSystem(1);
+            johnny9.launcherKick(1);
         } else {
             johnny9.intakeSystem(0);
         }
