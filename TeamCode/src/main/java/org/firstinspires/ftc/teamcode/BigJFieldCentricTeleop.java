@@ -50,43 +50,44 @@ public class BigJFieldCentricTeleop extends OpMode {
 
     }
 
+    private void driveFieldRelative(double forward, double right, double rotate) {
+        // First, convert direction being asked to drive to polar coordinates
+        double theta = Math.atan2(forward, right);
+        double r = Math.hypot(right, forward);
+
+        // Second, rotate angle by the angle the robot is pointing
+        theta = AngleUnit.normalizeRadians(theta -
+                johnny9.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
+        // Third, convert back to cartesian
+        double newForward = r * Math.sin(theta);
+        double newRight = r * Math.cos(theta);
+
+        // Finally, call the drive method with robot relative forward and right amounts
+        johnny9.move(newForward, newRight, rotate);
+    }
 
     @Override
     public void loop() {
 
 
-        double y = gamepad1.left_stick_y;
+        double y = -gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
 
-
-        if (gamepad1.options) {
-            johnny9.imu.resetYaw();
+        if (gamepad1.optionsWasPressed()) {
+            johnny9.resetYaw();
         }
-        double botHeading = johnny9.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-        rotX = rotX * 1.1;
-
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        double frontLeftPower = (rotY + rotX + rx) / denominator;
-        double backLeftPower = (rotY - rotX + rx) / denominator;
-        double frontRightPower = (rotY - rotX - rx) / denominator;
-        double backRightPower = (rotY + rotX - rx) / denominator;
-
-        if (gamepad1.right_trigger > 0){
+        /*if (gamepad1.right_trigger > 0){
+            // TBD
             frontLeftPower /= 3;
             backLeftPower /= 3;
             frontRightPower /= 3;
             backRightPower /= 3;
-        }
+        }*/
 
-        johnny9.motorFrontLeft.setPower(frontLeftPower);
-        johnny9.motorFrontRight.setPower(frontRightPower);
-        johnny9.motorBackLeft.setPower(backLeftPower);
-        johnny9.motorBackRight.setPower(backRightPower);
+        driveFieldRelative(y, x, rx);
 
         if (gamepad2.right_bumper) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -112,6 +113,9 @@ public class BigJFieldCentricTeleop extends OpMode {
         }
         if (gamepad2.dpad_right) {
             johnny9.launcherKick(.5);
+        }
+        if(gamepad1.back){
+            johnny9.resetYaw();
         }
     }
     public void stop(){
