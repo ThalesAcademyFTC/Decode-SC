@@ -21,20 +21,16 @@ public class Auton  extends LinearOpMode {
         int rest = 100;
 
         waitForStart();
-//e
-
-        johnny9.moveForwardInches(2,speed);
-
+        // This will start on the wall of the goal
         johnny9.moveBackwardInches(2,speed);
-
-        johnny9.moveLeftInches(2,speed);
-
-        johnny9.moveRightInches(2,speed);
-
-        johnny9.turnLeftDegrees(45,speed);
-
-        johnny9.turnRightDegrees(45,speed);
-
+        sleep(rest);
+        johnny9.runIntakeBallSnatch(speed);
+        sleep(1500);
+        johnny9.runIntakeBallSnatch(speed);
+        sleep(1500);
+        johnny9.runIntakeBallSnatch(speed);
+        sleep(1500);
+        
 
 
     }
