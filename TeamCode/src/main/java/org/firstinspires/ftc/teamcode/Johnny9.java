@@ -382,7 +382,7 @@ public class Johnny9 {
 
     public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
-                0, 6, 12, 0);
+                0, 8, 11, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
                 90, 0, 30, 0);
         aprilTag = new AprilTagProcessor.Builder()
@@ -560,7 +560,7 @@ public class Johnny9 {
             moveToLauncherZero();
             ballCheck++;
             sleep(50);
-            if (ballCheck >= 60){
+            if (ballCheck >= 40){
                 intakeSystem(0);
                 break;
             }

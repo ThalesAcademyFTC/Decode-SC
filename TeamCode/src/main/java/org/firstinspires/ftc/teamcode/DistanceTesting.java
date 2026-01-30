@@ -27,6 +27,7 @@ public class DistanceTesting extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             AprilTagPoseFtc pose = johnny9.getPos(24);
+            telemetry.update();
         }
     }
 }

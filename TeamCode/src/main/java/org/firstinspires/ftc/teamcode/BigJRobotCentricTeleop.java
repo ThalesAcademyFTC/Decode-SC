@@ -64,6 +64,11 @@ public class BigJRobotCentricTeleop extends OpMode {
         if (gamepad1.left_stick_x < 0) {
             x = -x;
         }
+        if (gamepad1.right_trigger > 0){
+            x /= 3;
+            y /= 3;
+            turn /= 3;
+        }
         johnny9.move(x, y, turn);
 
         // Special functions

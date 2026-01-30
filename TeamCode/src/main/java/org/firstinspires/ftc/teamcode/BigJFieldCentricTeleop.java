@@ -76,6 +76,13 @@ public class BigJFieldCentricTeleop extends OpMode {
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
 
+        if (gamepad1.right_trigger > 0){
+            frontLeftPower /= 3;
+            backLeftPower /= 3;
+            frontRightPower /= 3;
+            backRightPower /= 3;
+        }
+
         johnny9.motorFrontLeft.setPower(frontLeftPower);
         johnny9.motorFrontRight.setPower(frontRightPower);
         johnny9.motorBackLeft.setPower(backLeftPower);

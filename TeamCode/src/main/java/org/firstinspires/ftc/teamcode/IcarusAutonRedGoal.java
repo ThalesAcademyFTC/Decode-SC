@@ -21,11 +21,11 @@ public class IcarusAutonRedGoal extends LinearOpMode {
     public static final double LEEWAYX =3;
     public static final double TURNLEEWAY = 2.5;
     public static final double DISTANCELEEWAYY =2;
-    public static final double DISTANCEPERFECTY =35;
-    public static final double INTAKEPERFECTY=40;
-    public static final double INTAKEPERFECTX=40;
+    public static final double DISTANCEPERFECTY =45;
+    public static final double INTAKEPERFECTX=-25;
+    public static final double INTAKEPERFECTY=65;
     public static final double INTAKESETUPTURN=-45;
-    public static final double INTAKEPERFECTTURN=0;
+    public static final double INTAKEPERFECTTURN=55;
 
 
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -44,12 +44,13 @@ public class IcarusAutonRedGoal extends LinearOpMode {
         if(opModeIsActive()) {
             // Fire until it doesn't detect any balls (Check if the function ends early)
             johnny9.Led.setPosition(johnny9.GREENPOS);
-            johnny9.moveLeftInches(3,.5);
+            johnny9.moveLeftInches(4.5,.5);
             johnny9.runIntakeBallSnatch(1);
-            sleep(1000);
+            sleep(1200);
             johnny9.runIntakeBallSnatch(1);
-            sleep(1000);
+            sleep(1200);
             johnny9.runIntakeBallSnatch(1);
+            sleep(1200);
             // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
             while (Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - DISTANCEPERFECTY) >= DISTANCELEEWAYY) {
@@ -60,18 +61,19 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                 johnny9.turnLeftDegrees(ftcPose.yaw - INTAKESETUPTURN, .7);
             }
             // Manages the Turn, Y, and X values, moving and fixing them up in that order.
+            //-25 65 55
             while (!taskToogle) {
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
                 ftcPose = johnny9.getPos(24);
                 telemetry.update();
                 if (ftcPose != null) {
-                    if (ftcPose.yaw-INTAKEPERFECTTURN>TURNLEEWAY || ftcPose.yaw-INTAKEPERFECTTURN<-TURNLEEWAY){
+                    if (Math.abs(ftcPose.yaw-INTAKEPERFECTTURN)>TURNLEEWAY){
                         johnny9.turnLeftDegrees(ftcPose.yaw-INTAKEPERFECTTURN, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    } else if(ftcPose.y-INTAKEPERFECTY>LEEWAYY || ftcPose.y-INTAKEPERFECTY<-LEEWAYY) {
+                    } else if(Math.abs(ftcPose.y-INTAKEPERFECTY)>LEEWAYY) {
                         johnny9.moveRightInches(ftcPose.y-INTAKEPERFECTY, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    } else if (ftcPose.x-INTAKEPERFECTX>LEEWAYX || ftcPose.x-INTAKEPERFECTX<-LEEWAYX) {
+                    } else if (Math.abs(ftcPose.x-INTAKEPERFECTX)>LEEWAYX) {
                         johnny9.moveBackwardInches(ftcPose.x, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else {
