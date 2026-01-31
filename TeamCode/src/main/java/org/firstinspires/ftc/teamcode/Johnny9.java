@@ -147,7 +147,7 @@ public class Johnny9 {
                 }*/
                 parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+                        RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
                 imu.initialize(parameters);
                 break;
 
@@ -166,8 +166,8 @@ public class Johnny9 {
                 //webcam = hwMap.get(WebcamName.class, "webcam");
 
                 parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
-                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+                        RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
                 imu.initialize(parameters);
                 break;
         }
@@ -262,10 +262,10 @@ public class Johnny9 {
                 telem.addData("front right encoder:", motorFrontRight.getCurrentPosition());
                 telem.addData("back left encoder:", motorBackLeft.getCurrentPosition());
                 telem.addData("back right encoder:", motorBackRight.getCurrentPosition());*/
-                if (getPos(24) != null) {
-                    telem.addData("Pose x:", getPos(24));
-                    telem.update();
-                }
+                /*if (getPos(24) != null) {
+                   telem.addData("Pose x:", getPos(24));
+                   telem.update();
+                }*/
             } else {
                 finished = true;
             }
@@ -423,7 +423,6 @@ public class Johnny9 {
             return Obelisk.UNKNOWN;
         }
     }
-
     public AprilTagPoseFtc getPos(int searchID) {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telem.addData("# AprilTags Detected", currentDetections.size());

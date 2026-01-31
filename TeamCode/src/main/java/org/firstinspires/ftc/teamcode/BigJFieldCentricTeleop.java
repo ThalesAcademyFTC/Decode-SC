@@ -64,14 +64,13 @@ public class BigJFieldCentricTeleop extends OpMode {
         double newRight = r * Math.cos(theta);
 
         // Finally, call the drive method with robot relative forward and right amounts
-        johnny9.move(newForward, newRight, rotate);
+        johnny9.move( newRight, newForward , rotate);
     }
 
     @Override
     public void loop() {
 
-
-        double y = -gamepad1.left_stick_y;
+        double y = gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
 
@@ -87,7 +86,7 @@ public class BigJFieldCentricTeleop extends OpMode {
             backRightPower /= 3;
         }*/
 
-        driveFieldRelative(y, x, rx);
+        driveFieldRelative(-y, x, rx);
 
         if (gamepad2.right_bumper) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -114,9 +113,10 @@ public class BigJFieldCentricTeleop extends OpMode {
         if (gamepad2.dpad_right) {
             johnny9.launcherKick(.5);
         }
-        if(gamepad1.back){
+        if(gamepad1.backWasPressed()){
             johnny9.resetYaw();
         }
+
     }
     public void stop(){
         johnny9.visionPortal.close();

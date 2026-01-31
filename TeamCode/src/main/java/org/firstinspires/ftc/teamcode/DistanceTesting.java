@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 @Autonomous
@@ -27,6 +28,7 @@ public class DistanceTesting extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             AprilTagPoseFtc pose = johnny9.getPos(24);
+            telemetry.addData("Distance(MM): ", johnny9.distanceSensor.getDistance(DistanceUnit.MM));
             telemetry.update();
         }
     }
