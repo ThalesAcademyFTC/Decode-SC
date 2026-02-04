@@ -35,8 +35,21 @@ public class AutoRed extends LinearOpMode {
         while(opModeIsActive()) {
 
 
-            johnny9.runIntakeBallSnatch(speed);
-            sleep(100);
+            if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)<100&&johnny9.distanceSensor.getDistance(DistanceUnit.MM)>10){
+                johnny9.moveLeftInches(1,speed);
+                sleep(rest);
+            }
+            else{
+                johnny9.rest();
+                sleep(rest);
+                johnny9.runIntakeBallSnatch(speed);
+                sleep(rest*2);
+                johnny9.runIntakeBallSnatch(speed);
+                sleep(rest*2);
+                johnny9.runIntakeBallSnatch(speed);
+                sleep(rest*2);
+                johnny9.moveBackwardInches(2,speed);
+            }
         }
 
 

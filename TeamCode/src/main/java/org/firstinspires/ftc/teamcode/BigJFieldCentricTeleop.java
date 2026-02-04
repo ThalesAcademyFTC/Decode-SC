@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.UNKNOWN;
-
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -25,6 +20,8 @@ public class BigJFieldCentricTeleop extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     boolean ftcTag = true;
+
+    boolean isBackDetected =false;
 
     @Override
     public void init() {
@@ -77,6 +74,9 @@ public class BigJFieldCentricTeleop extends OpMode {
         if (gamepad1.optionsWasPressed()) {
             johnny9.resetYaw();
         }
+        if(gamepad1.backWasPressed()){
+            isBackDetected=true;
+        }
 
         /*if (gamepad1.right_trigger > 0){
             // TBD
@@ -88,17 +88,17 @@ public class BigJFieldCentricTeleop extends OpMode {
 
         driveFieldRelative(-y, x, rx);
 
-        if (gamepad2.right_bumper) {
+        if (gamepad2.right_bumper || gamepad1.right_bumper) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             johnny9.launchTime(1);
-        } else if (gamepad2.rightBumperWasReleased()) {
+        } else if (gamepad2.rightBumperWasReleased() ||) {
             johnny9.moveToLauncherZero();
             gamepad2.resetEdgeDetection();
         }
         //intake and outtake system
-        if (gamepad2.left_bumper) {
+        if (gamepad2.left_bumper || gamepad1.left_bumper) {
             johnny9.intakeSystem(1);
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad2.dpad_down || gamepad1.dpad_down) {
             johnny9.intakeSystem(-1);
         } else {
             johnny9.intakeSystem(0);
@@ -110,12 +110,13 @@ public class BigJFieldCentricTeleop extends OpMode {
         if (gamepad2.dpad_up) {
             johnny9.elevate(1);
         }
-        if (gamepad2.dpad_right) {
+        if (gamepad2.dpad_right || gamepad1.dpad_right) {
             johnny9.launcherKick(.5);
         }
         if(gamepad1.backWasPressed()){
             johnny9.resetYaw();
         }
+
 
     }
     public void stop(){

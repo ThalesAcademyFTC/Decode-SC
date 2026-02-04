@@ -23,6 +23,7 @@ public class BigJRobotCentricTeleop extends OpMode {
     boolean resetInProgress = true;
     boolean isBallDetected;
 
+    boolean isBackDetected=false;
 
     @Override
     public void init() {
@@ -40,6 +41,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         telemetry.addData("Dist:", () -> { return johnny9.colorSensor.getDistance(DistanceUnit.MM); });
         telemetry.addData("Ball Detected ",()->{return johnny9.isBallDetected();});
 
+        telemetry.addData("Gamepad1 y: ",()->{return gamepad1.y;});
 
         johnny9.initAprilTag();
         johnny9.findLauncherZero();
@@ -55,6 +57,11 @@ public class BigJRobotCentricTeleop extends OpMode {
         double y = gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x / 2;
+        if(gamepad1.backWasPressed()){
+            isBackDetected=true;
+        }
+
+
 
         y *= y;
         if (gamepad1.left_stick_y > 0) {
@@ -69,23 +76,24 @@ public class BigJRobotCentricTeleop extends OpMode {
             y /= 3;
             turn /= 3;
         }
+
         johnny9.move(x, y, turn);
 
         // Special functions
         // launch trigger(right bumper)
-        if (gamepad2.right_bumper) {
+        if (gamepad2.right_bumper || (isBackDetected && gamepad1.right_bumper )) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             johnny9.launchTime(1);
-        } else if (gamepad2.rightBumperWasReleased()) {
+        } else if (gamepad2.rightBumperWasReleased() || (isBackDetected && gamepad1.rightBumperWasReleased())) {
             johnny9.moveToLauncherZero();
             gamepad2.resetEdgeDetection();
         }
         //intake and outtake system
-        if (gamepad2.left_bumper) {
+        if (gamepad2.left_bumper || (isBackDetected && gamepad1.left_bumper) ) {
             johnny9.intakeSystem(1);
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad2.dpad_down || (isBackDetected && gamepad1.dpad_down)) {
             johnny9.intakeSystem(-1);
-        } else if (gamepad2.left_trigger > 0) {
+        } else if (gamepad2.left_trigger > 0 || (isBackDetected && gamepad1.left_trigger>0)) {
             johnny9.intakeSystem(1);
             johnny9.launcherKick(1);
         } else {
