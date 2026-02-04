@@ -20,9 +20,9 @@ public class IcarusAutonRedGoal extends LinearOpMode {
     public static final double LEEWAYY =6;
     public static final double LEEWAYX =3;
     public static final double TURNLEEWAY = 2.5;
-    public static final double INTAKEPERFECTX=-27.5;
-    public static final double INTAKEPERFECTY=66.5;
-    public static final double INTAKEPERFECTTURN=56;
+    public static final double INTAKEPERFECTX=-29;
+    public static final double INTAKEPERFECTY=66;
+    public static final double INTAKEPERFECTTURN=55.5;
 
 
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -43,31 +43,32 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             johnny9.Led.setPosition(johnny9.GREENPOS);
             johnny9.moveLeftInches(4.5,.5);
             johnny9.runIntakeBallSnatch(1);
-            sleep(1300);
+            sleep(1500);
             johnny9.runIntakeBallSnatch(1);
-            sleep(1300);
+            sleep(1500);
             johnny9.runIntakeBallSnatch(1);
-            sleep(1300);
+            sleep(1500);
             johnny9.launchTime(0);
             // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
-            johnny9.moveLeftInches(50,1);
+            johnny9.moveLeftInches(45,.7);
+            johnny9.moveBackwardInches(18,0.4);
             AprilTagPoseFtc ftcPose;
             // Manages the Turn, Y, and X values, moving and fixing them up in that order.
-            //-27.5 66.5 56
+            //-29 66 59
             while (!taskToogle) {
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
                 ftcPose = johnny9.getPos(24);
                 telemetry.update();
                 if (ftcPose != null) {
-                    if (Math.abs(ftcPose.yaw-INTAKEPERFECTTURN)>TURNLEEWAY){
-                        johnny9.turnLeftDegrees(ftcPose.yaw-INTAKEPERFECTTURN, speed);
+                    if (Math.abs(ftcPose.yaw - INTAKEPERFECTTURN) > TURNLEEWAY) {
+                        johnny9.turnLeftDegrees(INTAKEPERFECTTURN-ftcPose.yaw, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    } else if(Math.abs(ftcPose.y-INTAKEPERFECTY)>LEEWAYY) {
-                        johnny9.moveRightInches(ftcPose.y-INTAKEPERFECTY, speed);
+                    } else if (Math.abs(ftcPose.x - INTAKEPERFECTX) > LEEWAYX) {
+                        johnny9.moveBackwardInches(INTAKEPERFECTX-ftcPose.x, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    } else if (Math.abs(ftcPose.x-INTAKEPERFECTX)>LEEWAYX) {
-                        johnny9.moveBackwardInches(ftcPose.x-INTAKEPERFECTX, speed);
+                    } else if (Math.abs(ftcPose.y - INTAKEPERFECTY) > LEEWAYY) {
+                        johnny9.moveRightInches(INTAKEPERFECTY-ftcPose.y, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else {
                         taskToogle = true;
@@ -77,16 +78,17 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                     johnny9.Led.setPosition(johnny9.REDPOS);
                     sleep(rest);
                 }
+            }
             johnny9.turnLeftDegrees(180, .8);
             sleep(rest);
             johnny9.intakeSystem(speed);
-            johnny9.moveForwardInches(8,.3);
+            johnny9.moveForwardInches(24,.3);
             johnny9.intakeSystem(speed);
             sleep(rest);
             johnny9.intakeSystem(0);
             johnny9.turnLeftDegrees(180,.8);
             sleep(rest);
-            johnny9.moveBackwardInches(8, .8);
+            johnny9.moveBackwardInches(24, .8);
 
             taskToogle=false;
             while (!taskToogle) {
@@ -144,9 +146,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             }
 
         }
-
             johnny9.visionPortal.close();
-        }
 
     }
 }

@@ -565,7 +565,7 @@ public class Johnny9 {
             }
         }
         if(isBallDetected()) {
-            sleep(150);
+            sleep(100);
             intakeSystem(0);
             launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             launchTime(speed);

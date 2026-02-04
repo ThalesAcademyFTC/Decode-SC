@@ -91,7 +91,7 @@ public class BigJFieldCentricTeleop extends OpMode {
         if (gamepad2.right_bumper || gamepad1.right_bumper) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             johnny9.launchTime(1);
-        } else if (gamepad2.rightBumperWasReleased() ||) {
+        } else if (gamepad2.rightBumperWasReleased() || gamepad1.rightBumperWasReleased()) {
             johnny9.moveToLauncherZero();
             gamepad2.resetEdgeDetection();
         }
