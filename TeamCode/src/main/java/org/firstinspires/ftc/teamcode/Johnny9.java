@@ -83,7 +83,7 @@ public class Johnny9 {
 
     public static final double BLUEPOS = 0.555;
     static final double WHITEPOS = 1.0;
-  public static  final int LAUNCHTARGETPOS = 5281;
+    public static final int LAUNCHTARGETPOS = 5281;
 
     //Setup for the Johnny9 teleop AKA BigJ
     public Johnny9(OpMode opmode, Drivetrain drivetrain) {
@@ -362,7 +362,7 @@ public class Johnny9 {
 
     public void elevate(double speed) {
         elevatorMotor.setPower(speed);
-        if (!isBallDetected()){
+        if (!isBallDetected()) {
             elevatorServo.setPower(speed);
         } else {
             elevatorServo.setPower(0);
@@ -423,6 +423,7 @@ public class Johnny9 {
             return Obelisk.UNKNOWN;
         }
     }
+
     public AprilTagPoseFtc getPos(int searchID) {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telem.addData("# AprilTags Detected", currentDetections.size());
@@ -559,26 +560,32 @@ public class Johnny9 {
             moveToLauncherZero();
             ballCheck++;
             sleep(50);
-            if (ballCheck >= 40){
+            if (ballCheck >= 40) {
                 intakeSystem(0);
                 break;
             }
         }
-        if(isBallDetected()) {
+        if (isBallDetected()) {
             sleep(100);
             intakeSystem(0);
             launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             launchTime(speed);
         }
     }
-    public void runIntakeBallReset(double speed){
+
+    public void runIntakeBallReset(double speed) {
         runIntakeBallSnatch(speed);
         sleep(1500);
         moveToLauncherZero();
     }
 
     public boolean isBallDetected() {
-        return colorSensor.getDistance(DistanceUnit.MM) < 140.00;
+        if (colorSensor.getDistance(DistanceUnit.MM) < 140.00) {
+            sleep(100);
+            return true;
+        }
 
+        return false;
     }
+
 }

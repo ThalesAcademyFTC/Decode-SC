@@ -41,17 +41,13 @@ public class BigJRobotCentricTeleop extends OpMode {
         telemetry.addData("Dist:", () -> { return johnny9.colorSensor.getDistance(DistanceUnit.MM); });
         telemetry.addData("Ball Detected ",()->{return johnny9.isBallDetected();});
 
-        telemetry.addData("Gamepad1 y: ",()->{return gamepad1.left_stick_y;});
-        telemetry.addData("FL: ",()->{return johnny9.motorFrontLeft.getPower();});
-        telemetry.addData("FR: ",()->{return johnny9.motorFrontRight.getPower();});
-        telemetry.addData("BL: ",()->{return johnny9.motorBackLeft.getPower();});
-        telemetry.addData("BR: ",()->{return johnny9.motorBackRight.getPower();});
+
 
         johnny9.initAprilTag();
         johnny9.findLauncherZero();
         runtime.reset();
         telemetry.update();
-//e
+
     }
 
     @Override
@@ -61,7 +57,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         double y = gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x / 2;
-        if(gamepad1.backWasPressed()){
+        if(gamepad1.back){
             isBackDetected=true;
         }
 
@@ -88,7 +84,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         if (gamepad2.right_bumper || (isBackDetected && gamepad1.right_bumper )) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             johnny9.launchTime(1);
-        } else if (gamepad2.rightBumperWasReleased() || (isBackDetected && gamepad1.rightBumperWasReleased())) {
+        } else if (gamepad2.rightBumperWasReleased() || gamepad1.rightBumperWasReleased()) {
             johnny9.moveToLauncherZero();
             gamepad2.resetEdgeDetection();
         }
