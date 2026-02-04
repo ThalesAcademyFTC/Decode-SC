@@ -41,7 +41,11 @@ public class BigJRobotCentricTeleop extends OpMode {
         telemetry.addData("Dist:", () -> { return johnny9.colorSensor.getDistance(DistanceUnit.MM); });
         telemetry.addData("Ball Detected ",()->{return johnny9.isBallDetected();});
 
-        telemetry.addData("Gamepad1 y: ",()->{return gamepad1.y;});
+        telemetry.addData("Gamepad1 y: ",()->{return gamepad1.left_stick_y;});
+        telemetry.addData("FL: ",()->{return johnny9.motorFrontLeft.getPower();});
+        telemetry.addData("FR: ",()->{return johnny9.motorFrontRight.getPower();});
+        telemetry.addData("BL: ",()->{return johnny9.motorBackLeft.getPower();});
+        telemetry.addData("BR: ",()->{return johnny9.motorBackRight.getPower();});
 
         johnny9.initAprilTag();
         johnny9.findLauncherZero();
