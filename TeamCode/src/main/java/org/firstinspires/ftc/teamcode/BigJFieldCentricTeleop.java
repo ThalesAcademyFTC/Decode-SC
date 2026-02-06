@@ -21,7 +21,7 @@ public class BigJFieldCentricTeleop extends OpMode {
 
     boolean ftcTag = true;
 
-    boolean isBackDetected =false;
+    boolean isStartDetected =false;
 
     @Override
     public void init() {
@@ -74,8 +74,9 @@ public class BigJFieldCentricTeleop extends OpMode {
         if (gamepad1.optionsWasPressed()) {
             johnny9.resetYaw();
         }
-        if(gamepad1.back){
-            isBackDetected=true;
+        // control for the special people in this world
+        if(gamepad1.startWasPressed()) {
+            isStartDetected=true;
         }
         y *= y;
         if (gamepad1.left_stick_y > 0) {
@@ -85,11 +86,12 @@ public class BigJFieldCentricTeleop extends OpMode {
         if (gamepad1.left_stick_x < 0) {
             x = -x;
         }
-        if (gamepad1.right_trigger > 0){
+        if (gamepad1.left_trigger > 0){
             x /= 3;
             y /= 3;
             rx/=3;
         }
+
    //     if(johnny9.distanceSensor.getDistance(DistanceUnit.MM))
         /*if (gamepad1.right_trigger > 0){
             // TBD
@@ -101,7 +103,7 @@ public class BigJFieldCentricTeleop extends OpMode {
 
         driveFieldRelative(y, x, rx);
 
-        if (gamepad2.right_bumper || (isBackDetected && gamepad1.right_bumper)) {
+        if (gamepad2.right_bumper || (isStartDetected && gamepad1.right_bumper)) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             johnny9.launchTime(1);
         } else if (gamepad2.rightBumperWasReleased() || gamepad1.rightBumperWasReleased()) {
@@ -109,9 +111,9 @@ public class BigJFieldCentricTeleop extends OpMode {
             gamepad2.resetEdgeDetection();
         }
         //intake and outtake system
-        if (gamepad2.left_bumper || (isBackDetected && gamepad1.left_bumper)) {
+        if (gamepad2.left_bumper || (isStartDetected && gamepad1.left_bumper)) {
             johnny9.intakeSystem(1);
-        } else if (gamepad2.dpad_down || (isBackDetected && gamepad1.dpad_down)) {
+        } else if (gamepad2.dpad_down || (isStartDetected && gamepad1.dpad_down)) {
             johnny9.intakeSystem(-1);
         } else {
             johnny9.intakeSystem(0);
@@ -123,13 +125,12 @@ public class BigJFieldCentricTeleop extends OpMode {
         if (gamepad2.dpad_up) {
             johnny9.elevate(1);
         }
-        if (gamepad2.dpad_right ||(isBackDetected && gamepad1.dpad_right) ) {
+        if (gamepad2.dpad_right ||(isStartDetected && gamepad1.dpad_right) ) {
             johnny9.launcherKick(.5);
         }
-        if(isBackDetected){
+        if(gamepad1.back){
             johnny9.resetYaw();
         }
-
 
     }
     public void stop(){
