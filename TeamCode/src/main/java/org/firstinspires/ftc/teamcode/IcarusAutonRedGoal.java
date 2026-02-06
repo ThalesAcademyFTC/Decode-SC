@@ -52,7 +52,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
             johnny9.moveLeftInches(45,.7);
-            johnny9.moveBackwardInches(18,0.4);
+            johnny9.moveBackwardInches(22,0.4);
             AprilTagPoseFtc ftcPose;
             // Manages the Turn, Y, and X values, moving and fixing them up in that order.
             //-29 66 59
@@ -66,7 +66,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (Math.abs(ftcPose.x - INTAKEPERFECTX) > LEEWAYX) {
                         johnny9.moveBackwardInches(INTAKEPERFECTX-ftcPose.x, speed);
-                        johnny9.Led.setPosition(johnny9.BLUEPOS);
+                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (Math.abs(ftcPose.y - INTAKEPERFECTY) > LEEWAYY) {
                         johnny9.moveRightInches(INTAKEPERFECTY-ftcPose.y, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);

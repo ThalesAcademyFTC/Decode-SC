@@ -289,12 +289,12 @@ public class Johnny9 {
 
         for (DcMotor x : allDriveMotors) {
 
-            x.setTargetPosition(-tickTarget);
+            x.setTargetPosition(tickTarget);
             x.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
 
-        move(0, -speed, 0);
+        move(0, speed, 0);
 
         waitForMotors();
 
@@ -390,8 +390,8 @@ public class Johnny9 {
                 .build();
 
         if (USE_WEBCAM) {
-            visionPortal = VisionPortal.easyCreateWithDefaults(
-                    hwMap.get(WebcamName.class, "Eye of Johnny 9"), aprilTag);
+            WebcamName webcam = hwMap.get(WebcamName.class, "Eye of Johnny 9");
+            visionPortal = VisionPortal.easyCreateWithDefaults(webcam, aprilTag);
         } else {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     BuiltinCameraDirection.BACK, aprilTag);
