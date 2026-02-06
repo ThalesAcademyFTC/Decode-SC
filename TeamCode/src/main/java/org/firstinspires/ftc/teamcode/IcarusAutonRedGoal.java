@@ -51,9 +51,13 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             johnny9.launchTime(0);
             // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
-            johnny9.moveLeftInches(45,.7);
-            johnny9.moveBackwardInches(22,0.4);
-            AprilTagPoseFtc ftcPose;
+            johnny9.moveLeftInches(45,.8);
+            johnny9.moveBackwardInches(20 ,0.8);
+            AprilTagPoseFtc ftcPose = johnny9.getPos(24);
+            if(ftcPose != null){
+                johnny9.turnLeftDegrees(INTAKEPERFECTTURN-ftcPose.yaw, speed);
+                johnny9.moveLeftInches(12, 0.8);
+            }
             // Manages the Turn, Y, and X values, moving and fixing them up in that order.
             //-29 66 59
             while (!taskToogle) {
@@ -66,7 +70,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (Math.abs(ftcPose.x - INTAKEPERFECTX) > LEEWAYX) {
                         johnny9.moveBackwardInches(INTAKEPERFECTX-ftcPose.x, speed);
-                         johnny9.Led.setPosition(johnny9.BLUEPOS);
+                        johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (Math.abs(ftcPose.y - INTAKEPERFECTY) > LEEWAYY) {
                         johnny9.moveRightInches(INTAKEPERFECTY-ftcPose.y, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
@@ -91,6 +95,9 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             johnny9.moveBackwardInches(24, .8);
 
             taskToogle=false;
+
+
+
             while (!taskToogle) {
             // search for goal april tag and turn robot to point straight at it, basic fire setup code
 
