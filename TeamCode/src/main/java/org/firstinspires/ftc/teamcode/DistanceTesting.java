@@ -29,6 +29,7 @@ public class DistanceTesting extends LinearOpMode {
         while (opModeIsActive()) {
             AprilTagPoseFtc pose = johnny9.getPos(24);
             telemetry.addData("Distance(MM): ", johnny9.distanceSensor.getDistance(DistanceUnit.MM));
+            telemetry.addData("Ball Distance(MM): ", johnny9.colorSensor.getDistance(DistanceUnit.MM));
             telemetry.update();
         }
     }

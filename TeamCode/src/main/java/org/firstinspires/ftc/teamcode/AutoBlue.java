@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous
 
-public class AutoRed extends LinearOpMode {
+public class AutoBlue extends LinearOpMode {
     private Johnny9 johnny9;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -42,3 +42,4 @@ public class AutoRed extends LinearOpMode {
 
     }
 }
+

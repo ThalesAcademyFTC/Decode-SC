@@ -365,7 +365,7 @@ public class Johnny9 {
         if (!isBallDetected()) {
             elevatorServo.setPower(speed);
         } else {
-            elevatorServo.setPower(0);
+            elevatorServo.setPower(-speed);
         }
     }
 
@@ -566,21 +566,23 @@ public class Johnny9 {
             }
         }
         if (isBallDetected()) {
-            sleep(100);
+            elevatorServo.setPower(-1);
             intakeSystem(0);
             launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             launchTime(speed);
+            sleep(1500);
+            launchTime(0);
+            elevatorServo.setPower(0);
         }
     }
 
     public void runIntakeBallReset(double speed) {
         runIntakeBallSnatch(speed);
-        sleep(1500);
         moveToLauncherZero();
     }
 
     public boolean isBallDetected() {
-        if (colorSensor.getDistance(DistanceUnit.MM) < 140.00) {
+        if (colorSensor.getDistance(DistanceUnit.MM) < 148.00) {
             sleep(100);
             return true;
         }

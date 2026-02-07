@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import static android.os.SystemClock.sleep;
-import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
+import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.UNKNOWN;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
+
 @Autonomous
-public class IcarusAutonRedGoal extends LinearOpMode {
+public class IcarusAutonBlueGoal extends LinearOpMode {
     private Johnny9 johnny9;
 
     private ElapsedTime runtime=new ElapsedTime();
@@ -20,9 +19,9 @@ public class IcarusAutonRedGoal extends LinearOpMode {
     public static final double LEEWAYY =6;
     public static final double LEEWAYX =3;
     public static final double TURNLEEWAY = 2.5;
-    public static final double INTAKEPERFECTX=-29;
+    public static final double INTAKEPERFECTX=29;
     public static final double INTAKEPERFECTY=66;
-    public static final double INTAKEPERFECTTURN=57;
+    public static final double INTAKEPERFECTTURN=-57;
 
 
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -41,16 +40,17 @@ public class IcarusAutonRedGoal extends LinearOpMode {
         if(opModeIsActive()) {
             // Fire until it doesn't detect any balls (Check if the function ends early)
             johnny9.Led.setPosition(johnny9.GREENPOS);
-            johnny9.moveLeftInches(4.5,.5);
+            johnny9.moveLeftInches(4.5, speed);
             johnny9.runIntakeBallSnatch(1);
+            sleep(100);
             johnny9.runIntakeBallSnatch(1);
+            sleep(100);
             johnny9.runIntakeBallSnatch(1);
-            johnny9.launchTime(0);
             // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
             johnny9.moveLeftInches(45,speed);
-            johnny9.moveBackwardInches(20 ,speed);
-            AprilTagPoseFtc ftcPose = johnny9.getPos(24);
+            johnny9.moveForwardInches(20,speed);
+            AprilTagPoseFtc ftcPose = johnny9.getPos(20);
             if(ftcPose != null){
                 johnny9.turnLeftDegrees(INTAKEPERFECTTURN-ftcPose.yaw, speed);
                 johnny9.moveLeftInches(18, speed);
@@ -59,7 +59,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             //-29 66 58.5
             while (!taskToogle) {
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
-                ftcPose = johnny9.getPos(24);
+                ftcPose = johnny9.getPos(20);
                 telemetry.update();
                 if (ftcPose != null) {
                     if (Math.abs(ftcPose.yaw - INTAKEPERFECTTURN) > TURNLEEWAY) {
@@ -77,16 +77,16 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                 } else {
                     // No tag detected
                     johnny9.Led.setPosition(johnny9.REDPOS);
+                    sleep(rest);
                 }
             }
-            johnny9.turnLeftDegrees(180, speed);
             johnny9.intakeSystem(1);
             johnny9.moveForwardInches(24,.175);
             johnny9.intakeSystem(1);
-            johnny9.intakeSystem(0);
-            johnny9.turnLeftDegrees(180,speed);
             sleep(rest);
-            johnny9.moveForwardInches(48, speed);
+            johnny9.intakeSystem(0);
+            sleep(rest);
+            johnny9.moveBackwardInches(36, speed);
 
             taskToogle=false;
 
@@ -97,7 +97,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
 
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
-                ftcPose = johnny9.getPos(24);
+                ftcPose = johnny9.getPos(20);
                 if (ftcPose != null) {
                     telemetry.addData("X: %f", ftcPose.x);
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
@@ -144,6 +144,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             johnny9.Led.setPosition(johnny9.GREENPOS);
             while (opModeIsActive()) {
                 johnny9.runIntakeBallSnatch(1);
+                sleep(rest);
             }
 
         }

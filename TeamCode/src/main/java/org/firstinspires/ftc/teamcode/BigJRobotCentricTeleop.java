@@ -56,7 +56,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         double y = gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x / 2;
-        if(gamepad1.back){
+        if(gamepad1.start){
             isStartDetected =true;
         }
 
