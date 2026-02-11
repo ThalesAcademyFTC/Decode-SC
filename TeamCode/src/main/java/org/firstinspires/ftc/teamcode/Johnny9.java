@@ -173,12 +173,7 @@ public class Johnny9 {
         }
     }
 
-    public void rest() {
-        motorBackLeft.setPower(0);
-        motorBackRight.setPower(0);
-        motorFrontLeft.setPower(0);
-        motorFrontRight.setPower(0);
-    }
+
 
     public void move(double x, double y, double turn) {
         double denominator;
@@ -524,7 +519,7 @@ public class Johnny9 {
         launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launcherMotor.setTargetPosition(LAUNCHTARGETPOS - (launcherMotor.getCurrentPosition() % LAUNCHTARGETPOS) + launcherMotor.getCurrentPosition());
         launcherMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        launcherMotor.setPower(0.5);
+        launcherMotor.setPower(1);
     }
     //launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     //launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -582,12 +577,7 @@ public class Johnny9 {
     }
 
     public boolean isBallDetected() {
-        if (colorSensor.getDistance(DistanceUnit.MM) < 148.00) {
-            sleep(100);
-            return true;
-        }
-
-        return false;
+        return colorSensor.getDistance(DistanceUnit.MM) < 148.00;
     }
 
 }

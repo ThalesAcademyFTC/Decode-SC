@@ -17,12 +17,12 @@ public class IcarusAutonRedGoal extends LinearOpMode {
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
 
-    public static final double LEEWAYY =6;
-    public static final double LEEWAYX =3;
-    public static final double TURNLEEWAY = 2.5;
-    public static final double INTAKEPERFECTX=-29;
-    public static final double INTAKEPERFECTY=66;
-    public static final double INTAKEPERFECTTURN=57;
+    public static final double LEEWAYY =3;
+    public static final double LEEWAYX =1.5;
+    public static final double TURNLEEWAY = 1.5;
+    public static final double INTAKEPERFECTX=29;
+    public static final double INTAKEPERFECTY=68;
+    public static final double INTAKEPERFECTTURN=-56;
 
 
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -41,19 +41,18 @@ public class IcarusAutonRedGoal extends LinearOpMode {
         if(opModeIsActive()) {
             // Fire until it doesn't detect any balls (Check if the function ends early)
             johnny9.Led.setPosition(johnny9.GREENPOS);
-            johnny9.moveLeftInches(4.5,.5);
+            johnny9.moveLeftInches(4.5, speed);
             johnny9.runIntakeBallSnatch(1);
             johnny9.runIntakeBallSnatch(1);
             johnny9.runIntakeBallSnatch(1);
-            johnny9.launchTime(0);
             // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
-            johnny9.moveLeftInches(45,speed);
-            johnny9.moveBackwardInches(20 ,speed);
+            johnny9.moveLeftInches(36,speed);
+            johnny9.moveForwardInches(12,speed);
             AprilTagPoseFtc ftcPose = johnny9.getPos(24);
             if(ftcPose != null){
                 johnny9.turnLeftDegrees(INTAKEPERFECTTURN-ftcPose.yaw, speed);
-                johnny9.moveLeftInches(18, speed);
+                johnny9.moveLeftInches(36, speed);
             }
             // Manages the Turn, Y, and X values, moving and fixing them up in that order.
             //-29 66 58.5
@@ -79,21 +78,19 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                     johnny9.Led.setPosition(johnny9.REDPOS);
                 }
             }
-            johnny9.turnLeftDegrees(180, speed);
+            johnny9.turnRightDegrees(180,speed);
             johnny9.intakeSystem(1);
-            johnny9.moveForwardInches(24,.175);
-            johnny9.intakeSystem(1);
+            johnny9.moveForwardInches(24,.2);
             johnny9.intakeSystem(0);
             johnny9.turnLeftDegrees(180,speed);
-            sleep(rest);
-            johnny9.moveForwardInches(48, speed);
+            johnny9.moveBackwardInches(30, speed);
 
             taskToogle=false;
 
 
 
             while (!taskToogle) {
-            // search for goal april tag and turn robot to point straight at it, basic fire setup code
+                // search for goal april tag and turn robot to point straight at it, basic fire setup code
 
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
@@ -119,8 +116,8 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                     } else {
                         taskToogle = true;
                     }
-                // If it can't see the april tag but knows it's aligned, keep moving forward.
-                // This is because it can't see if it's too close.
+                    // If it can't see the april tag but knows it's aligned, keep moving forward.
+                    // This is because it can't see if it's too close.
                 } else if (sightToogle) {
                     if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) > LEEWAYY) {
                         sightToogle = true;
@@ -144,10 +141,11 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             johnny9.Led.setPosition(johnny9.GREENPOS);
             while (opModeIsActive()) {
                 johnny9.runIntakeBallSnatch(1);
+                sleep(rest);
             }
 
         }
-            johnny9.visionPortal.close();
+        johnny9.visionPortal.close();
 
     }
 }

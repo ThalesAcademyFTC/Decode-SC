@@ -16,12 +16,12 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
 
-    public static final double LEEWAYY =6;
-    public static final double LEEWAYX =3;
-    public static final double TURNLEEWAY = 2.5;
+    public static final double LEEWAYY =3;
+    public static final double LEEWAYX =1.5;
+    public static final double TURNLEEWAY = 1.5;
     public static final double INTAKEPERFECTX=29;
-    public static final double INTAKEPERFECTY=66;
-    public static final double INTAKEPERFECTTURN=-57;
+    public static final double INTAKEPERFECTY=68;
+    public static final double INTAKEPERFECTTURN=-56;
 
 
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -42,18 +42,16 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
             johnny9.Led.setPosition(johnny9.GREENPOS);
             johnny9.moveLeftInches(4.5, speed);
             johnny9.runIntakeBallSnatch(1);
-            sleep(100);
             johnny9.runIntakeBallSnatch(1);
-            sleep(100);
             johnny9.runIntakeBallSnatch(1);
             // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
-            johnny9.moveLeftInches(45,speed);
-            johnny9.moveForwardInches(20,speed);
+            johnny9.moveLeftInches(36,speed);
+            johnny9.moveForwardInches(12,speed);
             AprilTagPoseFtc ftcPose = johnny9.getPos(20);
             if(ftcPose != null){
                 johnny9.turnLeftDegrees(INTAKEPERFECTTURN-ftcPose.yaw, speed);
-                johnny9.moveLeftInches(18, speed);
+                johnny9.moveLeftInches(36, speed);
             }
             // Manages the Turn, Y, and X values, moving and fixing them up in that order.
             //-29 66 58.5
@@ -77,16 +75,12 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                 } else {
                     // No tag detected
                     johnny9.Led.setPosition(johnny9.REDPOS);
-                    sleep(rest);
                 }
             }
             johnny9.intakeSystem(1);
-            johnny9.moveForwardInches(24,.175);
-            johnny9.intakeSystem(1);
-            sleep(rest);
+            johnny9.moveForwardInches(24,.2);
             johnny9.intakeSystem(0);
-            sleep(rest);
-            johnny9.moveBackwardInches(36, speed);
+            johnny9.moveBackwardInches(30, speed);
 
             taskToogle=false;
 
