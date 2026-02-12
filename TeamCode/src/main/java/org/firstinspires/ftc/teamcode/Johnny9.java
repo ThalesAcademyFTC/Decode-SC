@@ -3,20 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import static android.os.SystemClock.sleep;
 
 
-import android.graphics.Color;
+import android.util.Size;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -63,7 +61,7 @@ public class Johnny9 {
     public RevColorSensorV3 colorSensor;
     public Rev2mDistanceSensor distanceSensor;
     public VisionPortal eyeofjohnny9;
-    public CRServo intakeServo0, intakeServo1, intakeServo2, elevatorServo;
+    public CRServo intakeServo0, intakeServo1, funnelServo, elevatorServo;
 
     public DcMotor[] allDriveMotors;
     public CRServo[] allIntakeServos;
@@ -123,7 +121,7 @@ public class Johnny9 {
                 elevatorServo = hwMap.crservo.get("elevatorServo");
                 intakeServo0 = hwMap.crservo.get("intakeServo0");
                 intakeServo1 = hwMap.crservo.get("intakeServo1");
-                intakeServo2 = hwMap.crservo.get("intakeServo2");
+                funnelServo = hwMap.crservo.get("funnelServo");
                 colorSensor = hwMap.get(RevColorSensorV3.class, "colorSensor");
                 // colorSensor.setGain();
                 distanceSensor = hwMap.get(Rev2mDistanceSensor.class, "distanceSensor");
@@ -131,11 +129,12 @@ public class Johnny9 {
                 //colorSensor=hwMap.get(NormalizedColorSensor.class,"colorSensor");
                 Led = hwMap.servo.get("Led");
                 allDriveMotors = new DcMotor[]{motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight};
-                allIntakeServos = new CRServo[]{intakeServo0, intakeServo1, intakeServo2};
+                allIntakeServos = new CRServo[]{intakeServo0, intakeServo1, funnelServo};
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 intakeServo0.setDirection(CRServo.Direction.REVERSE);
-                intakeServo2.setDirection(CRServo.Direction.REVERSE);
+                intakeServo1.setDirection(CRServo.Direction.REVERSE);
+                funnelServo.setDirection(CRServo.Direction.REVERSE);
                 elevatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
                 elevatorServo.setDirection(CRServo.Direction.REVERSE);
 
@@ -239,7 +238,7 @@ public class Johnny9 {
     }
 
     public double getHeading() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
     public void addSensorTelemetry() {
@@ -386,7 +385,13 @@ public class Johnny9 {
 
         if (USE_WEBCAM) {
             WebcamName webcam = hwMap.get(WebcamName.class, "Eye of Johnny 9");
-            visionPortal = VisionPortal.easyCreateWithDefaults(webcam, aprilTag);
+            //visionPortal = VisionPortal.easyCreateWithDefaults(webcam, aprilTag);
+            Size size = new Size(1280, 720);
+
+            VisionPortal.Builder builder = new VisionPortal.Builder();
+            builder.setCamera(webcam).setCameraResolution(size);
+            builder.addProcessor(aprilTag);
+            visionPortal = builder.build();
         } else {
             visionPortal = VisionPortal.easyCreateWithDefaults(
                     BuiltinCameraDirection.BACK, aprilTag);

@@ -38,30 +38,29 @@ public class BigJFieldCentricTeleop extends OpMode {
         });
         telemetry.addData("Dist:", () -> { return johnny9.colorSensor.getDistance(DistanceUnit.MM); });
         telemetry.addData("Ball Detected ",()->{return johnny9.isBallDetected();});
-
-
         johnny9.initAprilTag();
+        johnny9.getPos(20);
+        if (ftcPose != null) {
+            johnny9.getPos(24);
+        }
+        if (ftcPose != null) {
+            telemetry.addData("FTC pose: ",()-> ftcPose.yaw);
+        }
         johnny9.findLauncherZero();
         runtime.reset();
         telemetry.update();
 
     }
 
-    private void driveFieldRelative(double forward, double right, double rotate) {
-        // First, convert direction being asked to drive to polar coordinates
-        double theta = Math.atan2(forward, right);
-        double r = Math.hypot(right, forward);
-
-        // Second, rotate angle by the angle the robot is pointing
-        theta = AngleUnit.normalizeRadians(theta -
-                johnny9.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
-
-        // Third, convert back to cartesian
-        double newForward = r * Math.sin(theta);
-        double newRight = r * Math.cos(theta);
-
-        // Finally, call the drive method with robot relative forward and right amounts
-        johnny9.move( newRight, newForward , rotate);
+    public void driveFieldRelative (double up, double right, double rotateCW) {
+        // figure out direction from up and right
+        double v1 = Math.sqrt((up*up) + (right*right));
+        double theta = Math.atan2(right, up);
+        double beta = johnny9.getHeading();
+        double alpha = (Math.PI / 2) - beta - theta;
+        double x2 = Math.cos(alpha) * v1;
+        double y2 = Math.sin(alpha) * v1;
+        johnny9.move(x2,y2, rotateCW);
     }
 
     @Override

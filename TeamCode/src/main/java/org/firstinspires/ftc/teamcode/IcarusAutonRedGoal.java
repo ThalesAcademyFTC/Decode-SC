@@ -20,9 +20,9 @@ public class IcarusAutonRedGoal extends LinearOpMode {
     public static final double LEEWAYY =3;
     public static final double LEEWAYX =1.5;
     public static final double TURNLEEWAY = 1.5;
-    public static final double INTAKEPERFECTX=29;
+    public static final double INTAKEPERFECTX=-29;
     public static final double INTAKEPERFECTY=68;
-    public static final double INTAKEPERFECTTURN=-56;
+    public static final double INTAKEPERFECTTURN=56;
 
 
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -48,7 +48,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             // Backs up a lil to get ready
             johnny9.Led.setPosition(johnny9.BLUEPOS);
             johnny9.moveLeftInches(36,speed);
-            johnny9.moveForwardInches(12,speed);
+            johnny9.moveBackwardInches(12,speed);
             AprilTagPoseFtc ftcPose = johnny9.getPos(24);
             if(ftcPose != null){
                 johnny9.turnLeftDegrees(INTAKEPERFECTTURN-ftcPose.yaw, speed);
@@ -83,7 +83,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             johnny9.moveForwardInches(24,.2);
             johnny9.intakeSystem(0);
             johnny9.turnLeftDegrees(180,speed);
-            johnny9.moveBackwardInches(30, speed);
+            johnny9.moveForwardInches(30, speed);
 
             taskToogle=false;
 
@@ -103,7 +103,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                         johnny9.turnLeftDegrees(ftcPose.yaw, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (ftcPose.x > LEEWAYX || ftcPose.x < -LEEWAYX) {
-                        johnny9.moveBackwardInches(ftcPose.x, speed);
+                        johnny9.moveForwardInches(ftcPose.x, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) > LEEWAYY) {
                         sightToogle = true;
