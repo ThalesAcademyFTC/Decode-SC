@@ -31,7 +31,7 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
         johnny9.initAprilTag();
         johnny9.findLauncherZero();
         runtime.reset();
-        double speed=0.8;
+        double speed=1;
         int rest=100;
         boolean sightToogle=false;
         boolean taskToogle =false;
@@ -96,10 +96,10 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                     telemetry.addData("X: %f", ftcPose.x);
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
                     telemetry.update();
-                    if (ftcPose.yaw > TURNLEEWAY || ftcPose.yaw < -TURNLEEWAY) {
+                    if (Math.abs(ftcPose.yaw) > TURNLEEWAY) {
                         johnny9.turnRightDegrees(ftcPose.yaw, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    } else if (ftcPose.x > LEEWAYX || ftcPose.x < -LEEWAYX) {
+                    } else if (Math.abs(ftcPose.x) > LEEWAYX) {
                         johnny9.moveForwardInches(ftcPose.x, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) > LEEWAYY) {
@@ -107,7 +107,7 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                         if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
                             johnny9.moveRightInches(50, speed);
                         } else {
-                            johnny9.moveRightInches((johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - LEEWAYY), speed);
+                            johnny9.moveRightInches((johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - LEEWAYY/2), speed);
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else {
