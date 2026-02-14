@@ -18,13 +18,12 @@ public class IcarusAutonRedGoal extends LinearOpMode {
     public Johnny9.Obelisk obValue = UNKNOWN;
 
     public static final double LEEWAYY = 3;
-    public static final double LEEWAYX =1.5;
-    public static final double TURNLEEWAY = 1.5;
-    public static final double FIRINGY = 4.5;
+    public static final double LEEWAYX = 4.5;
+    public static final double TURNLEEWAY = 3;
+    public static final double FIRINGY = 3;
     public static final double INTAKESETUPY=47;
-    public static final double INTAKEPERFECTX=-29;
-    public static final double INTAKEPERFECTY=68;
     public static final double INTAKEPERFECTTURN=-124;
+    public static final int APRILTAGCODE=24;
 
 
     public static final String OBELISK_VALUE_STRING = "obelisk";
@@ -52,7 +51,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             johnny9.Led.setPosition(johnny9.BLUEPOS);
             johnny9.moveLeftInches(24,speed);
             while (taskToogle){
-                ftcPose = johnny9.getPos(24);
+                ftcPose = johnny9.getPos(APRILTAGCODE);
                 if(ftcPose != null){
                     if(Math.abs(ftcPose.y-INTAKESETUPY)>TURNLEEWAY){
                         johnny9.moveForwardInches(ftcPose.y-INTAKESETUPY, speed);
@@ -61,18 +60,21 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                     }
                 }
             }
-            ftcPose= johnny9.getPos(24);
+            ftcPose= johnny9.getPos(APRILTAGCODE);
             if (Math.abs(ftcPose.yaw) > TURNLEEWAY) {
                 johnny9.turnRightDegrees(ftcPose.yaw, speed);
             }
+            if (Math.abs(ftcPose.x) > LEEWAYX){
+                johnny9.moveForwardInches(ftcPose.x, speed);
+            }
             johnny9.resetYaw();
             johnny9.turnRightDegrees(johnny9.getHeading()-INTAKEPERFECTTURN,speed);
-            johnny9.moveRightInches(27, speed);
+            johnny9.moveRightInches(27.5, speed);
             // Manages the Turn, Y, and X values, moving and fixing them up in that order.
             //-29 66 58.5
             /*while (!taskToogle) {
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
-                ftcPose = johnny9.getPos(24);
+                ftcPose = johnny9.getPos(APRILTAGCODE);
                 telemetry.update();
                 if (ftcPose != null) {
                     if (Math.abs(ftcPose.yaw - INTAKEPERFECTTURN) > TURNLEEWAY) {
@@ -92,18 +94,17 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                     johnny9.Led.setPosition(johnny9.REDPOS);
                 }
             }*/
-            taskToogle = false;
             johnny9.intakeSystem(1);
-            johnny9.moveForwardInches(24,.2);
+            johnny9.moveForwardInches(26,.2);
             johnny9.intakeSystem(0);
-            johnny9.moveBackwardInches(24, speed);
+            johnny9.moveBackwardInches(26, speed);
             johnny9.turnLeftDegrees(johnny9.getHeading()-INTAKEPERFECTTURN, speed);
-            while (!taskToogle) {
+            taskToogle = true;
+            while (taskToogle) {
                 // search for goal april tag and turn robot to point straight at it, basic fire setup code
-
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
-                ftcPose = johnny9.getPos(24);
+                ftcPose = johnny9.getPos(APRILTAGCODE);
                 if (ftcPose != null) {
                     telemetry.addData("X: %f", ftcPose.x);
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
@@ -114,8 +115,8 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                     } else if (Math.abs(ftcPose.x) > LEEWAYX) {
                         johnny9.moveForwardInches(ftcPose.x, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
-                    }else if (Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGY) > LEEWAYY) {
-                            sightToogle = true;
+                    } else if (Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGY) > LEEWAYY) {
+                        sightToogle = true;
                         if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
                             johnny9.moveRightInches(50, speed);
                         } else {
@@ -123,7 +124,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else {
-                        taskToogle = true;
+                        taskToogle = false;
                     }
                     // If it can't see the april tag but knows it's aligned, keep moving forward.
                     // This is because it can't see if it's too close.
@@ -137,20 +138,17 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                     } else {
-                        taskToogle = true;
+                        taskToogle = false;
                     }
                 } else {
                     // No tag detected
                     johnny9.Led.setPosition(johnny9.REDPOS);
-                    sleep(rest);
                 }
             }
             //FIRE
-            sleep(rest);
             johnny9.Led.setPosition(johnny9.GREENPOS);
-            while (opModeIsActive()) {
+            while (!isStopRequested()) {
                 johnny9.runIntakeBallSnatch(1);
-                sleep(rest);
             }
 
         }

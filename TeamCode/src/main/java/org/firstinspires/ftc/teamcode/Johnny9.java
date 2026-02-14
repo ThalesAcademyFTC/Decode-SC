@@ -376,7 +376,7 @@ public class Johnny9 {
 
     public void initAprilTag() {
         Position cameraPosition = new Position(DistanceUnit.INCH,
-                0, 8, 11, 0);
+                1.5, 8, 11, 0);
         YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
                 90, 0, 30, 0);
         aprilTag = new AprilTagProcessor.Builder()
@@ -582,7 +582,7 @@ public class Johnny9 {
     }
 
     public boolean isBallDetected() {
-        return colorSensor.getDistance(DistanceUnit.MM) < 148.00;
+        return colorSensor.getDistance(DistanceUnit.MM) < 122.00;
     }
 
 }
