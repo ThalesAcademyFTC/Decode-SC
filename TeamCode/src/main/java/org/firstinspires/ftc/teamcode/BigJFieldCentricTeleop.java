@@ -91,14 +91,7 @@ public class BigJFieldCentricTeleop extends OpMode {
             rx/=3;
         }
 
-   //     if(johnny9.distanceSensor.getDistance(DistanceUnit.MM))
-        /*if (gamepad1.right_trigger > 0){
-            // TBD
-            frontLeftPower /= 3;
-            backLeftPower /= 3;
-            frontRightPower /= 3;
-            backRightPower /= 3;
-        }*/
+
 
         driveFieldRelative(y, x, rx);
 
@@ -129,6 +122,15 @@ public class BigJFieldCentricTeleop extends OpMode {
         }
         if(gamepad1.back){
             johnny9.resetYaw();
+        }
+        if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)<153){
+            johnny9.Led.setPosition(johnny9.GREENPOS);
+        }
+        else if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)>153 && johnny9.distanceSensor.getDistance(DistanceUnit.MM)<160){
+            johnny9.Led.setPosition(johnny9.REDPOS);
+        }
+        else{
+            johnny9.Led.setPosition(0);
         }
 
     }

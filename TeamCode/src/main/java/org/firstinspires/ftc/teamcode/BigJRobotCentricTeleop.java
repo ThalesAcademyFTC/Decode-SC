@@ -37,6 +37,7 @@ public class BigJRobotCentricTeleop extends OpMode {
         telemetry.addData("Launcher Power", () -> {
             return johnny9.launcherMotor.getPower();
         });
+        telemetry.addData("Distance(DS): ",()->{return johnny9.distanceSensor.getDistance(DistanceUnit.MM);});
         telemetry.addData("Dist:", () -> { return johnny9.colorSensor.getDistance(DistanceUnit.MM); });
         telemetry.addData("Ball Detected ",()->{return johnny9.isBallDetected();});
 
@@ -108,8 +109,11 @@ public class BigJRobotCentricTeleop extends OpMode {
         if (gamepad2.dpad_right){
             johnny9.launcherKick(.5);
         }
-        if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)<=153){
+        if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)<153){
             johnny9.Led.setPosition(Johnny9.REDPOS);
+        }
+        else if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)>153 && johnny9.distanceSensor.getDistance(DistanceUnit.MM)<160){
+            johnny9.Led.setPosition(Johnny9.GREENPOS);
         }
         else{
             johnny9.Led.setPosition(0);
