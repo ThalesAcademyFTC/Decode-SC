@@ -109,10 +109,10 @@ public class BigJRobotCentricTeleop extends OpMode {
         if (gamepad2.dpad_right){
             johnny9.launcherKick(.5);
         }
-        if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)<153){
+        if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)<257){
             johnny9.Led.setPosition(Johnny9.REDPOS);
         }
-        else if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)>153 && johnny9.distanceSensor.getDistance(DistanceUnit.MM)<160){
+        else if(johnny9.distanceSensor.getDistance(DistanceUnit.MM)>253 && johnny9.distanceSensor.getDistance(DistanceUnit.MM)<260){
             johnny9.Led.setPosition(Johnny9.GREENPOS);
         }
         else{

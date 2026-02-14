@@ -21,11 +21,11 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
     public static final double LEEWAYY = 1.5;
     public static final double LEEWAYX = 5;
     public static final double TURNLEEWAY = 5;
-    public static final double FIRINGY = 4.5;
+    public static final double FIRINGY = 5.5;
     public static final double INTAKESETUPY=47;
     public static final double INTAKETURN=124;
     public static final double INTAKEX=27.5;
-    public static final double INTAKEFORWARD=26;
+    public static final double INTAKEFORWARD=27.5;
     public static final int APRILTAGCODE=20;
 
 
