@@ -1,27 +1,31 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.UNKNOWN;
+import static android.os.SystemClock.sleep;
+import static org.firstinspires.ftc.teamcode.Johnny9.Obelisk.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-
 @Autonomous
 public class IcarusAutonBlueGoal extends LinearOpMode {
     private Johnny9 johnny9;
 
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
-
-    public static final double LEEWAYY = 3;
-    public static final double LEEWAYX = 4.5;
-    public static final double TURNLEEWAY = 3;
-    public static final double FIRINGY = 3;
+    // Sets values here to be more easily changed
+        // The only difference between the two autons is INTAKEPERFECTURN (Which is opposite).
+    public static final double LEEWAYY = 1.5;
+    public static final double LEEWAYX = 5;
+    public static final double TURNLEEWAY = 5;
+    public static final double FIRINGY = 4.5;
     public static final double INTAKESETUPY=47;
-    public static final double INTAKEPERFECTTURN=124;
+    public static final double INTAKETURN=124;
+    public static final double INTAKEX=27.5;
+    public static final double INTAKEFORWARD=26;
     public static final int APRILTAGCODE=20;
 
 
@@ -40,13 +44,14 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
 
         waitForStart();
         if(opModeIsActive()) {
-            // Fire until it doesn't detect any balls (Check if the function ends early)
+            // Moves back to firing position and fires three times.
             johnny9.Led.setPosition(johnny9.GREENPOS);
             johnny9.moveLeftInches(FIRINGY, speed);
             johnny9.runIntakeBallSnatch(1);
             johnny9.runIntakeBallSnatch(1);
             johnny9.runIntakeBallSnatch(1);
-            // Backs up a lil to get ready
+            // Moves backwards to a position where it can see the april tag.
+                // Then aligns to a more proper y position so the next steps are more accurate.
             johnny9.Led.setPosition(johnny9.BLUEPOS);
             johnny9.moveLeftInches(24,speed);
             while (taskToogle){
@@ -59,19 +64,24 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                     }
                 }
             }
-            ftcPose= johnny9.getPos(APRILTAGCODE);
+            // Then, align the x and yaw to face the goal.
+            ftcPose = johnny9.getPos(APRILTAGCODE);
             if (Math.abs(ftcPose.yaw) > TURNLEEWAY) {
                 johnny9.turnRightDegrees(ftcPose.yaw, speed);
             }
+            ftcPose = johnny9.getPos(APRILTAGCODE);
             if (Math.abs(ftcPose.x) > LEEWAYX){
                 johnny9.moveForwardInches(ftcPose.x, speed);
             }
+            // Resets the yaw, this is now the 0.
+                // Then turns to proper intake position and moves to align with the balls.
             johnny9.resetYaw();
-            johnny9.turnRightDegrees(johnny9.getHeading()-INTAKEPERFECTTURN,speed);
-            johnny9.moveRightInches(27.5, speed);
-            // Manages the Turn, Y, and X values, moving and fixing them up in that order.
-            //-29 66 58.5
-            /*while (!taskToogle) {
+            johnny9.turnRightDegrees(johnny9.getHeading()-INTAKETURN,speed);
+            johnny9.moveRightInches(INTAKEX, speed);
+            /* Unused intake alignment tool.
+            //Manages the Turn, Y, and X values, moving and fixing them up in that order.
+
+            while (!taskToogle) {
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
                 ftcPose = johnny9.getPos(APRILTAGCODE);
                 telemetry.update();
@@ -93,14 +103,18 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                     johnny9.Led.setPosition(johnny9.REDPOS);
                 }
             }*/
+
+            // Intake turns on, moves forward to get the balls
+                // Then goes back and turns to face the goal again.
             johnny9.intakeSystem(1);
-            johnny9.moveForwardInches(26,.2);
+            johnny9.moveForwardInches(INTAKEFORWARD,.2);
             johnny9.intakeSystem(0);
-            johnny9.moveBackwardInches(26, speed);
-            johnny9.turnLeftDegrees(johnny9.getHeading()-INTAKEPERFECTTURN, speed);
+            johnny9.moveBackwardInches(INTAKEFORWARD, speed);
+            johnny9.turnLeftDegrees(johnny9.getHeading()-INTAKETURN, speed);
             taskToogle = true;
+            // Loops to check the april tag and distance sensor to align the robot accordingly.
+                // (Further details inside)
             while (taskToogle) {
-                // search for goal april tag and turn robot to point straight at it, basic fire setup code
                 telemetry.addData("Distance %f", johnny9.distanceSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 ftcPose = johnny9.getPos(APRILTAGCODE);
@@ -108,12 +122,19 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                     telemetry.addData("X: %f", ftcPose.x);
                     telemetry.addData("Yaw: %f", ftcPose.yaw);
                     telemetry.update();
+                    // If the yaw is inaccurate, turn to fix it.
                     if (Math.abs(ftcPose.yaw) > TURNLEEWAY) {
                         johnny9.turnRightDegrees(ftcPose.yaw, speed);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
+                        // If the left/right coordinates are too far from 0, move forward by the current x.
+                            // Moving forward because the robot is turned 90 degrees.
+                            // Moves a bit slower because it was sliding too much.
                     } else if (Math.abs(ftcPose.x) > LEEWAYX) {
-                        johnny9.moveForwardInches(ftcPose.x, speed);
+                        johnny9.moveForwardInches(ftcPose.x, speed*.75);
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
+                        // Do the same thing for the distance, using the sensor to check.
+                            // If outside of the sensor's range (around 50 inches), defaults to 50.
+                            // Also tags sight toggle, as we now know the x and yaw are already aligned.
                     } else if (Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGY) > LEEWAYY) {
                         sightToogle = true;
                         if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
@@ -122,12 +143,14 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                             johnny9.moveRightInches((Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGY)), speed);
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
+                        // If the yaw, x, and y are all accurate, end the loop.
                     } else {
                         taskToogle = false;
                     }
                     // If it can't see the april tag but knows it's aligned, keep moving forward.
-                    // This is because it can't see if it's too close.
+                        // This is because the robot can't see the x and y if it is too close.
                 } else if (sightToogle) {
+                    // Same distance sensor code as above.
                     if (Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGY) > LEEWAYY) {
                         sightToogle = true;
                         if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
@@ -136,6 +159,7 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                             johnny9.moveRightInches((Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGY)), speed);
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
+                        // Ends the loop if the distance is correct, as we already know the x and yaw are.
                     } else {
                         taskToogle = false;
                     }
@@ -144,14 +168,12 @@ public class IcarusAutonBlueGoal extends LinearOpMode {
                     johnny9.Led.setPosition(johnny9.REDPOS);
                 }
             }
-            //FIRE
+            // Fire until the time is up.
             johnny9.Led.setPosition(johnny9.GREENPOS);
             while (!isStopRequested()) {
                 johnny9.runIntakeBallSnatch(1);
             }
-
         }
         johnny9.visionPortal.close();
-
     }
 }
