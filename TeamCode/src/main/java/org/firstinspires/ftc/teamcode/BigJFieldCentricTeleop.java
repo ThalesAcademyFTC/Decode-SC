@@ -62,6 +62,23 @@ public class BigJFieldCentricTeleop extends OpMode {
         double y2 = Math.sin(alpha) * v1;
         johnny9.move(x2,y2, rotateCW);
     }
+    private void driveField(double forward, double right, double rotate) {
+        // First, convert direction being asked to drive to polar coordinates
+        double theta = Math.atan2(forward, right);
+        double r = Math.hypot(right, forward);
+
+        // Second, rotate angle by the angle the robot is pointing
+        theta = AngleUnit.normalizeRadians(theta -
+                johnny9.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+
+        // Third, convert back to cartesian
+        double newForward = r * Math.sin(theta);
+        double newRight = r * Math.cos(theta);
+
+        // Finally, call the drive method with robot relative forward and right amounts
+        johnny9.move(newForward, newRight, rotate);
+    }
+
 
     @Override
     public void loop() {
