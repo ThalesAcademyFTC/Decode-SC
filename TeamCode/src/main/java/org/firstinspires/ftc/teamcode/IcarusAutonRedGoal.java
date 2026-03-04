@@ -17,15 +17,15 @@ public class IcarusAutonRedGoal extends LinearOpMode {
     private ElapsedTime runtime=new ElapsedTime();
     public Johnny9.Obelisk obValue = UNKNOWN;
     // Sets values here to be more easily changed.
-        // The only difference between the two autons is INTAKEPERFECTURN (Which is opposite),
-    public static final double LEEWAYY = 3;
-    public static final double LEEWAYX = 3;
+        // The only difference between the two autons is INTAKEPERFECTURN and APRILTAGCODE.
+    public static final double LEEWAYY = 1.5;
+    public static final double LEEWAYX = 5;
     public static final double TURNLEEWAY = 5;
-    public static final double FIRINGY = 5.5;
+    public static final double FIRINGY = 6.5;
     public static final double INTAKESETUPY=47;
     public static final double INTAKETURN=-124;
-    public static final double INTAKEX=27.5;
-    public static final double INTAKEFORWARD=27.5;
+    public static final double INTAKEX=26.5;
+    public static final double INTAKEFORWARD=26.5;
     public static final int APRILTAGCODE=24;
 
 
@@ -53,7 +53,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             // Moves backwards to a position where it can see the april tag.
                 // Then aligns to a more proper y position so the next steps are more accurate.
             johnny9.Led.setPosition(johnny9.BLUEPOS);
-            johnny9.moveLeftInches(24,speed);
+            johnny9.moveLeftInches(28,speed);
             while (taskToogle){
                 ftcPose = johnny9.getPos(APRILTAGCODE);
                 if(ftcPose != null){
@@ -66,10 +66,16 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             }
             // Then, align the x and yaw to face the goal.
             ftcPose = johnny9.getPos(APRILTAGCODE);
+            while (ftcPose == null){
+                ftcPose = johnny9.getPos(APRILTAGCODE);
+            }
             if (Math.abs(ftcPose.yaw) > TURNLEEWAY) {
                 johnny9.turnRightDegrees(ftcPose.yaw, speed);
             }
             ftcPose = johnny9.getPos(APRILTAGCODE);
+            while (ftcPose == null){
+                ftcPose = johnny9.getPos(APRILTAGCODE);
+            }
             if (Math.abs(ftcPose.x) > LEEWAYX){
                 johnny9.moveForwardInches(ftcPose.x, speed);
             }
@@ -77,7 +83,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                 // Then turns to proper intake position and moves to align with the balls.
             johnny9.resetYaw();
             johnny9.turnRightDegrees(johnny9.getHeading()-INTAKETURN,speed);
-            johnny9.moveRightInches(INTAKEX, speed);
+            johnny9.moveRightInches(INTAKEX, speed*.75);
             /* Unused intake alignment tool.
              //Manages the Turn, Y, and X values, moving and fixing them up in that order.
 
@@ -107,7 +113,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
             // Intake turns on, moves forward to get the balls
                 //then goes back and turns to face the goal again.
             johnny9.intakeSystem(1);
-            johnny9.moveForwardInches(INTAKEFORWARD,.2);
+            johnny9.moveForwardInches(INTAKEFORWARD,speed*.25);
             johnny9.intakeSystem(0);
             johnny9.moveBackwardInches(INTAKEFORWARD, speed);
             johnny9.turnLeftDegrees(johnny9.getHeading()-INTAKETURN, speed);
@@ -156,7 +162,7 @@ public class IcarusAutonRedGoal extends LinearOpMode {
                         if (johnny9.distanceSensor.getDistance(DistanceUnit.INCH) >= 300) {
                             johnny9.moveRightInches(50, speed);
                         } else {
-                            johnny9.moveRightInches((Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGY)), speed);
+                            johnny9.moveRightInches(Math.abs(johnny9.distanceSensor.getDistance(DistanceUnit.INCH) - FIRINGY), speed);
                         }
                         johnny9.Led.setPosition(johnny9.BLUEPOS);
                         // Ends the loop if the distance is correct, as we already know the x and yaw are.
