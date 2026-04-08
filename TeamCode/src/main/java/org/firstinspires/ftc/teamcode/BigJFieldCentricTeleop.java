@@ -36,6 +36,8 @@ public class BigJFieldCentricTeleop extends OpMode {
         telemetry.addData("Launcher Power", () -> {
             return johnny9.launcherMotor.getPower();
         });
+        telemetry.addData(" Yaw ", ()->{return johnny9.getHeading();});
+
         telemetry.addData("Dist:", () -> { return johnny9.colorSensor.getDistance(DistanceUnit.MM); });
         telemetry.addData("Ball Detected ",()->{return johnny9.isBallDetected();});
         johnny9.initAprilTag();
@@ -76,7 +78,7 @@ public class BigJFieldCentricTeleop extends OpMode {
         double newRight = r * Math.cos(theta);
 
         // Finally, call the drive method with robot relative forward and right amounts
-        johnny9.move(newForward, newRight, rotate);
+        johnny9.move(newRight, newForward, rotate);
     }
 
 
@@ -108,9 +110,7 @@ public class BigJFieldCentricTeleop extends OpMode {
             rx/=3;
         }
 
-
-
-        driveFieldRelative(y, x, rx);
+        driveField(y, x, rx);
 
         if (gamepad2.right_bumper || (isStartDetected && gamepad1.right_bumper)) {
             johnny9.launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
