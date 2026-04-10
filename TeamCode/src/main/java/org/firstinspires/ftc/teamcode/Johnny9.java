@@ -146,7 +146,7 @@ public class Johnny9 {
                 }*/
                 parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                        RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
+                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
                 imu.initialize(parameters);
                 break;
 
@@ -196,11 +196,13 @@ public class Johnny9 {
                 telem.addLine("BackLeft:" + backLeftPower);
                 telem.addLine("BackRight:" + backRightPower);
 
+                */
+//e
                 telem.addData("front left encoder:", getRotationFL());
                 telem.addData("front right encoder:", getRotationFR());
                 telem.addData("back left encoder:", getRotationBL());
                 telem.addData("back right encoder:", getRotationBR());
-                telem.update();*/
+                telem.update();
 
                 motorFrontLeft.setPower(frontLeftPower);
                 motorFrontRight.setPower(frontRightPower);
@@ -238,7 +240,7 @@ public class Johnny9 {
     }
 
     public double getHeading() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
     public void addSensorTelemetry() {
