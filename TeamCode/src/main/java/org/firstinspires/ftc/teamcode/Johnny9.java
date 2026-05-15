@@ -35,11 +35,19 @@ import java.util.List;
 
 //Setup for Johnny9 class AKA BigJ.
 public class Johnny9 {
+    // all of the variable names
+    /*Here's how you write a variable:
+    * public/private variabletype(int, double, float, char, String, bool) variablename ;
+    * if it is an array, then after a variablename then add [] ( public void variablename[] = {x,y,z};
+    * */
     private HardwareMap hwMap;
     LinearOpMode auton;
     OpMode teleop;
 
     //Creates drivetrains, including JOHNNY9 AKA BIGJ
+    /*
+    * enums, or enumerations contain
+    * */
     public enum Drivetrain {
         MECHANUM,
         JOHNNY9,
